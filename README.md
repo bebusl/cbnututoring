@@ -9,7 +9,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ### Set port
 .env
 ```
-PORT=8081
+PORT=3000
 ```
 
 ## Note:

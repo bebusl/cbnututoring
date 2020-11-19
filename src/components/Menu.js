@@ -1,8 +1,11 @@
-import React, { Component, useEffect } from "react";
+import React, { Component, useEffect, useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { Menu as MenuUI } from "evergreen-ui";
+import { UserData, IsLogin } from "../App";
 
-function Menu({ program }) {
+function Menu(props, { program }) {
+  const { userData } = useContext(UserData);
+  const { loginStatus } = useContext(IsLogin);
   const isAdminTest = true;
   const studentNav = [
     { title: "강좌 조회", to: "/alllist", component: <div>강좌 조회</div> },
@@ -35,7 +38,10 @@ function Menu({ program }) {
   };
 
   useEffect(() => {
-    console.log("나 업데이트 되고 이쏘요");
+    if (!loginStatus) {
+      window.alert("로그인이 필요한 페이지 입니다.");
+      props.history.push("/login");
+    }
   });
 
   return (
@@ -46,7 +52,7 @@ function Menu({ program }) {
             console.log(`/${program}/student${nav.to}`);
             return (
               <MenuUI.Item key={index}>
-                <NavLink exact to={`/${program}/student${nav.to}`}>
+                <NavLink exact to={`/tutor/student${nav.to}`}>
                   {nav.title}
                 </NavLink>
               </MenuUI.Item>
@@ -54,21 +60,20 @@ function Menu({ program }) {
           })}
         </MenuUI.Group>
         <MenuUI.Divider />
-        {isAdminTest ? (
+        {userData.role === 3 ? (
           <MenuUI.Group title="관리자">
             {adminNav.map((nav, index) => {
               return (
-                  <MenuUI.Item>
-                  <NavLink exact to={`/${program}/admin${nav.to}`}>
-                    {nav.title}</NavLink>
-                  </MenuUI.Item>
-
+                <MenuUI.Item>
+                  <NavLink exact to={`/tutor/admin${nav.to}`}>
+                    {nav.title}
+                  </NavLink>
+                </MenuUI.Item>
               );
             })}
           </MenuUI.Group>
         ) : undefined}
       </MenuUI>
-
     </div>
   );
 }

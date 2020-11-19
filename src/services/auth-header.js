@@ -1,30 +1,29 @@
 import axios from "axios";
 
-const AuthCheck = (props,option, checkAdmin = false) => {
-    let auth=false;
-    let datas = {};
-  axios.get("/api/accounts/auth").then((res) => {
+export default async function AuthCheck(props, option, checkAdmin = false) {
+  const data = await axios.get("/api/accounts/auth");
 
-    const data = res.data;
-    console.log("AuthCheck : ",data);
-    auth=true;
-    datas=data.account;
-    if (!data.success) {
-      if (option) {
-        props.history.push("/login");
+  return data;
+  /*axios.get("/api/accounts/auth").then((res) => {
+      const data = res.data;
+      console.log("AuthCheck : ", data);
+      if (!data.success) {
+        if (option) {
+          props.history.push("/login");
+        }
+        if (checkAdmin) {
+          props.history.push("/login");
+        }
+      } else {
+        if (checkAdmin && data.account.role != 3) {
+          //관리자 data.account.isAdmin아니면
+          props.history.push("/");
+        }
+        auth = true;
+        datas = data.account;
+        console.log("why not???? ", auth, datas);
       }
-      if (checkAdmin) {
-        props.history.push("/login");
-      }
-    } else {
-      if (checkAdmin && !data.account.isAdmin) {
-        //관리자 아니고 data.account.isAdmin아니면
-        props.history.push("/");
-      }
-    }
-
-  });
-  return{auth , datas};
-};
-
-export default AuthCheck;
+    });
+    resolve({ auth, datas });
+  });*/
+}

@@ -3,7 +3,6 @@ import {Link, withRouter, BrowserRouter, HashRouter,Route, Switch} from 'react-r
 
 
  function Select(props){
-    console.log("셀렉트 프로퍼티 출력 ",props.checkAdmin);
     return(
 
                 <div>

@@ -36,12 +36,13 @@ label {
   justify-content: center;
   align-items: flex-start;
   flex-direction: row;
+  width:100vw;
 }
 
 .container .menu{
-  width:25vw;
+  width:20vw;
 }
 
 .container .main-column{
-  width:60vw;
+  width:80vw;
 }

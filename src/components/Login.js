@@ -65,7 +65,7 @@ const Login = (props) => {
           console.log("로그인 페이지 : 로그인 성공");
           setLoginStatus(true); //로그인 성공시 status true로 바꿔서 헤더랑 이것저것 권한 되겡
           handleChangeUserData(response.data.account); //로그인 성공시 유저 데이터 불러옴.
-          props.history.push("/select");
+          props.history.push("/tutor/student/alllist");
         } else {
           console.log("로그인 페이지 : 로그인 실패");
           setLoginStatus(false);

@@ -12,11 +12,9 @@ const login = (_id, password) => {
   });
 };
 
-const logout = () => {
-  localStorage.removeItem("user");
-  axios
-    .get("/api/accounts/" + "logout")
-    .then((response) => console.log(response));
+const logout = async () => {
+  console.log("로그아웃 중");
+  return await axios.get("/api/accounts/logout");
 };
 
 const getCurrentUser = () => {

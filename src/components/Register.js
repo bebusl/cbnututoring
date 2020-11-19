@@ -8,22 +8,21 @@ import { isEmail } from "validator";
 
 function useForm({ initialValues, onSubmit, validate }) {
   const [values, setValues] = useState(initialValues);
-  const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
 
   const handleChange = (e) => {
     console.log(e.target.name, e.target.value);
     const { name, value } = e.target;
-    setValues({ ...values, [name]: value});
+    setValues({ ...values, [name]: value });
   };
 
   const doubleCheckPassword = () => {
-    if(values.password!=values.checkPassword){
-      return(
+    if (values.password != values.checkPassword) {
+      return (
         <div className="alert alert-danger" role="alert">
           비밀번호가 일치하지 않습니다.
         </div>
-      )
+      );
     }
   };
 
@@ -32,14 +31,14 @@ function useForm({ initialValues, onSubmit, validate }) {
     console.log(values);
 
     const result = AuthService.register({
-      "_id":values._id,
-      "password":values.password,
-      "name":values.name,
-      "email":values.email,
-      "phoneNumber":values.phoneNumber,
-      "department":values.department,
-      "role":values.role}
-    );
+      _id: values._id,
+      password: values.password,
+      name: values.name,
+      email: values.email,
+      phoneNumber: values.phoneNumber,
+      department: values.department,
+      role: values.role,
+    });
     return result;
   };
 
@@ -82,43 +81,27 @@ const vusername = (value) => {
   }
 };
 
-const vpassword = (value) => {
-  if (value.length < 6 || value.length > 40) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        The password must be between 6 and 40 characters.
-      </div>
-    );
-  }
-};
-
-
-
-
 const Register = (props) => {
   const form = useRef();
   const checkBtn = useRef();
   const [message, setMessage] = useState("");
   const [successful, setSuccessful] = useState(false);
-  const { values,handleChange, handleSubmit, doubleCheckPassword } = useForm({
+  const { values, handleChange, handleSubmit, doubleCheckPassword } = useForm({
     initialValues: {
       _id: "",
       password: "",
-      checkPassword:"",
+      checkPassword: "",
       name: "",
       email: "",
       phoneNumber: "",
       department: "0",
       role: "0",
-    }
+    },
   });
-
-
-
 
   const handleRegister = (e) => {
     e.preventDefault();
-    const result=handleSubmit(e);
+    const result = handleSubmit(e);
     setMessage("");
     setSuccessful(false);
 
@@ -129,10 +112,10 @@ const Register = (props) => {
         (response) => {
           setMessage(response.data.message);
           setSuccessful(true);
-          props.history.push('/login');
+          props.history.push("/login");
         },
         (error) => {
-          console.log("회원가입 에러 : ",error);
+          console.log("회원가입 에러 : ", error);
           const resMessage =
             (error.response &&
               error.response.data &&
@@ -205,7 +188,6 @@ const Register = (props) => {
                   validations={[required]}
                 />
               </div>
-              
 
               <div className="form-group">
                 <label htmlFor="email">이메일</label>
@@ -231,27 +213,28 @@ const Register = (props) => {
                 />
               </div>
 
-
               <div className="form-group">
                 <label htmlFor="department">학과</label>
-                <select name="department" value={values.department} onChange={handleChange}>
-                    <option value="0">컴퓨터공학과</option>
-                    <option value="1">소프트웨어학과</option>
-                    <option value="2">정보통신공학과</option>
-                    <option value="3">지능로봇</option>
-                    </select>
+                <select
+                  name="department"
+                  value={values.department}
+                  onChange={handleChange}
+                >
+                  <option value="0">컴퓨터공학과</option>
+                  <option value="1">소프트웨어학과</option>
+                  <option value="2">정보통신공학과</option>
+                  <option value="3">지능로봇</option>
+                </select>
               </div>
 
               <div className="form-group">
                 <label htmlFor="role">직위</label>
                 <select name="role" value={values.role} onChange={handleChange}>
-                    <option value="0">학부생</option>
-                    <option value="1">대학원생</option>
-                    <option value="2">교직원</option>
-
-                    </select>
+                  <option value="0">학부생</option>
+                  <option value="1">대학원생</option>
+                  <option value="2">교직원</option>
+                </select>
               </div>
-
 
               <div className="form-group">
                 <button className="btn btn-primary btn-block">회원가입</button>

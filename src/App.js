@@ -1,6 +1,7 @@
-import React, { useState, useContext, createContext, useEffect } from "react";
-import { Switch, Route, Link } from "react-router-dom";
+import React, { useState, createContext, useEffect } from "react";
+import { Switch, Route, Link, Redirect } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { Button } from "evergreen-ui";
 import "./App.css";
 import axios from "axios";
 import AuthService from "./services/auth.service";
@@ -28,7 +29,6 @@ let years = [];
 for (var y = start_year; y <= today_year; y++) {
   years.push(y);
 }
-const isAdminTest = true;
 const studentNav = [
   { title: "강좌 조회", to: "/alllist", component: <AllList years={years} /> },
   {
@@ -49,9 +49,9 @@ const adminNav = [
     component: <CourseManage years={years} />,
   },
   {
-    title: "수강신청 관리",
+    title: "수강신청 기간 설정",
     to: "/enrolmentseason",
-    component: <EnrolmentSeason />,
+    component: <EnrolmentSeason years={years} />,
   },
   { title: "보고서 관리", to: "/report", component: <Report /> },
 ];
@@ -80,20 +80,20 @@ const App = (props) => {
     fetchData(props, false);
     console.log(loginStatus, userData);*/
     //console.log(AuthCheck(props, false));
+    console.log("나 새로고침중");
     axios.get("/api/accounts/auth").then((res) => {
       const data = res.data;
-      if (!data.success) {
-        setLoginStatus(false);
-      } else {
-        setLoginStatus(true);
+      if (data.success !== loginStatus) {
+        //현재 로그인 상태와 변수에 저장된 값이 같지 않을 때. 아니면 무한 호출됨.
+        setLoginStatus(data.success);
         handleChangeUserData(data.account);
       }
     });
   });
 
-  const logOut = () => {
-    AuthService.logout();
-    setLoginStatus = false;
+  const logOut = async () => {
+    let out = await AuthService.logout();
+    setLoginStatus(false);
   };
 
   return (
@@ -153,12 +153,32 @@ const App = (props) => {
           <div className="container mt-3">
             <Switch>
               <Route exact path={["/", "/home"]} component={Home} />
-              <Route exact path="/login" component={Login} />
+              <Route exact path="/login" component={Login}>
+                {loginStatus ? <Redirect to="/user" /> : undefined}
+              </Route>
               <Route exact path="/register" component={Register} />
               <Route exact path="/select" component={ProgramSelect} />
-              {studentNav.map((url, idx) => {
-                return (
-                  <Route exact path={`/tutor/student${url.to}`}>
+              <Route exact path="/user" component={User}></Route>
+
+              {loginStatus &&
+                studentNav.map((url, idx) => {
+                  return (
+                    <Route exact path={`/tutor/student${url.to}`}>
+                      {!loginStatus ? props.history.push("/login") : undefined}
+                      <div className="menu">
+                        {loginStatus && <Menu program={program} />}
+                      </div>
+
+                      <div className="main-column">
+                        <h3>{url.title}</h3>
+                        {url.component}
+                      </div>
+                    </Route>
+                  );
+                })}
+              {loginStatus &&
+                adminNav.map((url, idx) => (
+                  <Route exact path={`/tutor/admin${url.to}`}>
                     <div className="menu">
                       {loginStatus && <Menu program={program} />}
                     </div>
@@ -168,22 +188,18 @@ const App = (props) => {
                       {url.component}
                     </div>
                   </Route>
-                );
-              })}
-              {adminNav.map((url, idx) => (
-                <Route
-                  exact
-                  path={`/tutor/admin${url.to}`}
-                  render={() => (
-                    <div>
-                      <h3>{url.title}</h3>
-                      {url.component}
-                    </div>
-                  )}
-                />
-              ))}
-              <Route exact to="/user" component={User}></Route>
+                ))}
+              <Redirect path="*" to="/login"></Redirect>
             </Switch>
+          </div>
+
+          <div className="selectMenu">
+            <Button className="selectButton">
+              <Link to="/tutor/student/alllist">튜터링</Link>
+            </Button>
+            <Button className="selectButton">
+              <Link to="/ta/student/alllist">TA</Link>
+            </Button>
           </div>
         </div>
       </UserData.Provider>

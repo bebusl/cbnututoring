@@ -1,40 +1,61 @@
-import React, { Component, Fragment } from "react";
+import React, { useState } from "react";
 
-class EnrolmentSeason extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      start: "",
-      end: ""
-    };
-  }
+const EnrolmentSeason = (props) => {
+  const [values, setValues] = useState({
+    start: "",
+    end: "",
+    year: 2020,
+    semester: 1,
+  });
 
-  onChangeStart = (e) => {
-    console.log(e.type, ":", e.target.value);
-    this.setState({
-      start: e.target.value,
-    });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    console.log(name, value);
+    setValues({ ...values, [name]: value });
   };
 
-  onChangeEnd = (e) => {
-    console.log(e.type, ":", e.target.value);
-    this.setState({
-      end: e.target.value,
-    });
-  };
-
-  render() {
-    return (
-      <Fragment>
+  return (
+    <>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          console.log(new Date(values.start).getTime());
+          console.log(new Date(values.end).getTime());
+        }}
+      >
+        <p>
+          년도{" "}
+          <select name="year" onChange={handleChange}>
+            {props.years.map((year) => (
+              <option value={year}>{year}</option>
+            ))}
+          </select>
+        </p>
+        <p>
+          학기{" "}
+          <select name="semester" onChange={handleChange}>
+            <option value="1">1</option>
+            <option value="2">2</option>
+          </select>
+        </p>
         <h5>수강신청 기간 설정</h5>
-        <form>
-          <input type="date" value={this.state.start} onChange={this.onChangeStart}></input>
-          ~<input type="date" value={this.state.end} onChange={this.onChangeEnd}></input>
+        <input
+          type="date"
+          name="start"
+          value={values.start}
+          onChange={handleChange}
+        ></input>
+        ~
+        <input
+          type="date"
+          name="end"
+          value={values.end}
+          onChange={handleChange}
+        ></input>
         <button type="submit">기간 변경</button>
-        </form>
-      </Fragment>
-    );
-  }
-}
+      </form>
+    </>
+  );
+};
 
 export default EnrolmentSeason;

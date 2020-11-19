@@ -3,13 +3,11 @@ import axios from "axios";
 
 function useForm({ initialValues, onSubmit, validate }) {
   const [values, setValues] = useState(initialValues);
-  const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
-    console.log("하이염:", name, value);
   };
 
   const handleFileChange = (e) => {
@@ -47,7 +45,6 @@ function useForm({ initialValues, onSubmit, validate }) {
 
   return {
     values,
-    errors,
     submitting,
     handleChange,
     handleSubmit,

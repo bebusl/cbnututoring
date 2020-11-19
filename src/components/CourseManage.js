@@ -1,17 +1,8 @@
-import React from 'react'
-import Table from './Table'
+import React from "react";
+import AllList from "./AllList";
 
-
-function CourseManage({years}){
-    return(<div>
-        <p>년도 <select name="year">
-            {years.map(year => (
-                <option value={year}>{year}</option>
-            ))}</select></p>
-        <p>학기 <select name="semester"><option value="1">1</option><option value="2">2</option></select></p>
-        <Table />
-    </div>
-    );
+function CourseManage({ years }) {
+  return <AllList years={years} isCourseManage={true}></AllList>;
 }
 
 export default CourseManage;

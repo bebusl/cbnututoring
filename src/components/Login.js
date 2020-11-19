@@ -1,9 +1,8 @@
-import React, { useState, useRef, useContext} from "react";
-import {IsLogin} from '../App'
+import React, { useState, useRef, useContext } from "react";
+import { IsLogin, UserData } from "../App";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
-
 import AuthService from "../services/auth.service";
 
 const required = (value) => {
@@ -24,8 +23,8 @@ const Login = (props) => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const [loginStatus,setLoginStatus]=useContext(IsLogin);
-
+  const { loginStatus, setLoginStatus } = useContext(IsLogin);
+  const { userData, setUserData } = useContext(UserData);
 
   const onChangeUsername = (e) => {
     const username = e.target.value;
@@ -37,26 +36,46 @@ const Login = (props) => {
     setPassword(password);
   };
 
-  const handleLogin = (e) => {
+  const handleChangeUserData = (newData) => {
+    setUserData((state) => {
+      return Object.assign({}, state, newData);
+    });
+  };
+
+  const handleLogin = async (e) => {
     e.preventDefault();
 
     setMessage("");
     setLoading(true);
 
-    
     form.current.validateAll();
 
     if (checkBtn.current.context._errors.length === 0) {
-        AuthService.login(username,password);
-        setLoginStatus(true);
-        props.history.push('/select');
-
-    } else {
-      setLoading(false);
+      const response = await AuthService.login(username, password).catch(
+        (error) => {
+          setLoginStatus(false);
+          window.alert("로그인 실패");
+          setLoading(false);
+          setPassword("");
+          props.history.push("/login");
+        }
+      );
+      if (response !== undefined) {
+        if (response.data.success === true) {
+          console.log("로그인 페이지 : 로그인 성공");
+          setLoginStatus(true); //로그인 성공시 status true로 바꿔서 헤더랑 이것저것 권한 되겡
+          handleChangeUserData(response.data.account); //로그인 성공시 유저 데이터 불러옴.
+          props.history.push("/select");
+        } else {
+          console.log("로그인 페이지 : 로그인 실패");
+          setLoginStatus(false);
+          window.alert("로그인 실패");
+          setLoading(false);
+          props.history.push("/login");
+        }
+      }
     }
   };
-
-
 
   return (
     <div className="col-md-12">

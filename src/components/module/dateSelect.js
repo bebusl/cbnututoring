@@ -11,7 +11,7 @@ const dateSelect = () => {
 
   return (
     <form onSubmit={s}>
-      <div className="yearwrap">
+      <div className="yearWrap">
         <label for="year">년도</label>
         <select name="year" onChange={handleChange}>
           {props.years.map((year) => (

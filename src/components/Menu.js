@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { Menu as MenuUI } from "evergreen-ui";
 import { UserData, IsLogin } from "../App";
 
-function Menu(props, { program }) {
+function Menu(props) {
   const { userData } = useContext(UserData);
   const { loginStatus } = useContext(IsLogin);
   const isAdminTest = true;
@@ -43,11 +43,12 @@ function Menu(props, { program }) {
       props.history.push("/login");
     }
   });
+  console.log("프로그램 이름", props.program);
 
   return (
     <div className="navigation">
       <MenuUI>
-        {Navtitle[program]}
+        {props.program === "tutor" && <p>학부생 튜터링</p>}
         {userData.role !== 3 ? (
           <MenuUI.Group title="학생">
             {studentNav.map((nav, index) => {
@@ -61,7 +62,6 @@ function Menu(props, { program }) {
             })}
           </MenuUI.Group>
         ) : undefined}
-        <MenuUI.Divider />
         {userData.role === 3 ? (
           <MenuUI.Group title="관리자">
             {adminNav.map((nav, index) => {

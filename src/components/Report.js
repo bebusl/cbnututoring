@@ -34,22 +34,24 @@ function Report({ years }) {
   return (
     <div>
       <form onSubmit={search}>
-        <p>
-          년도{" "}
-          <select name="year" value={year} onChange={yearChange}>
-            <option value={2020}>2020</option>
-            <option value={2021}>2021</option>
-            ))
-          </select>
-        </p>
-        <p>
-          학기{" "}
-          <select name="semester" value={semester} onChange={yearChange}>
-            <option value="1">1</option>
-            <option value="2">2</option>
-          </select>
-        </p>
-        <button type="submit">검색</button>
+        <div className="dateWrap">
+          <div className="yearWrap">
+            년도{" "}
+            <select name="year" value={year} onChange={yearChange}>
+              <option value={2020}>2020</option>
+              <option value={2021}>2021</option>
+              ))
+            </select>
+          </div>
+          <div className="semesterWrap">
+            학기{" "}
+            <select name="semester" value={semester} onChange={yearChange}>
+              <option value="1">1</option>
+              <option value="2">2</option>
+            </select>
+          </div>
+          <button type="submit">검색</button>
+        </div>
       </form>
       <Table>
         <Table.Head>

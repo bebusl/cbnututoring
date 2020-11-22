@@ -53,24 +53,26 @@ const AllList = ({ years, isCourseManage = false }) => {
   return (
     <div>
       <form onSubmit={search}>
-        <p>
-          년도{" "}
-          <select name="year" value={year} onChange={yearChange}>
-            {years.map((year) => (
-              <option value={year} key={year}>
-                {year}
-              </option>
-            ))}
-          </select>
-        </p>
-        <p>
-          학기{" "}
-          <select name="semester" value={semester} onChange={yearChange}>
-            <option value="1">1</option>
-            <option value="2">2</option>
-          </select>
-        </p>
-        <button type="submit">검색</button>
+        <div className="dateWrap">
+          <div className="yearWrap">
+            년도{" "}
+            <select name="year" value={year} onChange={yearChange}>
+              {years.map((year) => (
+                <option value={year} key={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="semesterWrap">
+            학기{" "}
+            <select name="semester" value={semester} onChange={yearChange}>
+              <option value="1">1</option>
+              <option value="2">2</option>
+            </select>
+          </div>
+          <button type="submit">검색</button>
+        </div>
       </form>
 
       <Table

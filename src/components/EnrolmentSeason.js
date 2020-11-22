@@ -23,23 +23,25 @@ const EnrolmentSeason = (props) => {
           console.log(new Date(values.end).getTime());
         }}
       >
-        <p>
-          년도{" "}
-          <select name="year" onChange={handleChange}>
-            {props.years.map((year) => (
-              <option value={year} key={year}>
-                {year}
-              </option>
-            ))}
-          </select>
-        </p>
-        <p>
-          학기{" "}
-          <select name="semester" onChange={handleChange}>
-            <option value="1">1</option>
-            <option value="2">2</option>
-          </select>
-        </p>
+        <div className="dateWrap">
+          <div className="yearWrap">
+            년도{" "}
+            <select name="year" onChange={handleChange}>
+              {props.years.map((year) => (
+                <option value={year} key={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="semesterWrap">
+            학기{" "}
+            <select name="semester" onChange={handleChange}>
+              <option value="1">1</option>
+              <option value="2">2</option>
+            </select>
+          </div>
+        </div>
         <h5>수강신청 기간 설정</h5>
         <input
           type="date"

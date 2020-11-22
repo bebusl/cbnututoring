@@ -69,10 +69,14 @@ export default function CourseReg({ years }) {
 
   return (
     <div>
-      <form onSubmit={handleSubmit} encType="multipart/form-data">
+      <form
+        className="courseReg"
+        onSubmit={handleSubmit}
+        encType="multipart/form-data"
+      >
         <ul>
           <li>
-            년도{" "}
+            <label htmlFor="year">년도</label>
             <select name="year" onChange={handleChange}>
               {years.map((year) => (
                 <option value={year} key={year}>
@@ -82,14 +86,15 @@ export default function CourseReg({ years }) {
             </select>
           </li>
           <li>
-            학기
+            <label htmlFor="semester">학기</label>
+
             <select name="semester" onChange={handleChange}>
               <option value="1">1</option>
               <option value="2">2</option>
             </select>
           </li>
           <li>
-            소속
+            <label htmlFor="department">학과</label>
             <select name="department" onChange={handleChange}>
               <option value="0">컴퓨터공학과</option>
               <option value="1">소프트웨어학과</option>
@@ -98,7 +103,8 @@ export default function CourseReg({ years }) {
             </select>{" "}
           </li>
           <li>
-            학년
+            <label htmlFor="grade">학년</label>
+
             <select name="grade" onChange={handleChange}>
               <option value="1">1학년</option>
               <option value="2">2학년</option>
@@ -107,7 +113,8 @@ export default function CourseReg({ years }) {
             </select>
           </li>
           <li>
-            교과목명
+            <label htmlFor="courseName">교과목명</label>
+
             <input
               type="text"
               name="courseName"
@@ -116,7 +123,8 @@ export default function CourseReg({ years }) {
           </li>
 
           <li>
-            담당교수
+            <label htmlFor="professorName">담당교수</label>
+
             <input
               type="text"
               name="professorName"
@@ -124,11 +132,13 @@ export default function CourseReg({ years }) {
             ></input>
           </li>
           <li>
-            튜터명
+            <label htmlFor="tutorName">튜터이름</label>
+
             <input type="text" name="tutorName" onChange={handleChange}></input>
           </li>
           <li>
-            튜터학번
+            <label htmlFor="tutorNumber">튜터학번</label>
+
             <input
               type="text"
               name="tutorNumber"
@@ -136,11 +146,12 @@ export default function CourseReg({ years }) {
             ></input>
           </li>
           <li>
-            최대인원
+            <label htmlFor="limit">최대인원</label>
             <input type="text" name="limit" onChange={handleChange}></input>
           </li>
           <li>
-            운영계획서
+            <label htmlFor="file">운영계획서</label>
+
             <input
               type="file"
               name="file"

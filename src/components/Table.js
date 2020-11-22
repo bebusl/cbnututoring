@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { UserData } from "../App";
 import { Table as TableUI, Button, Dialog, Pane, toaster } from "evergreen-ui";
 import DialogContents from "./DialogContents";
@@ -21,7 +21,11 @@ function Table({
     confirmLabel: "",
     content: "",
   });
-
+  useEffect(() => {
+    Axios.get("/api/systems/find/1/2020/2")
+      .then((res) => console.log(res))
+      .catch((error) => console.log(error));
+  }, []);
   const handleDialog = (newcontent) => {
     setDialog(Object.assign({}, dialog, newcontent));
   };
@@ -180,7 +184,42 @@ function Table({
                       <Button
                         appearance="minimal"
                         onClick={() => {
-                          User.courseDelete(data.id);
+                          handleDialog({
+                            title: "코스 삭제",
+                            confirmLabel: "삭제",
+                            content: (
+                              <div>
+                                <p>{data.courseName}과목을 삭제하시겠습니까?</p>
+                                <Button onClick={() => setIsShownFalse()}>
+                                  아니오
+                                </Button>
+                                <Button
+                                  intent="danger"
+                                  onClick={() => {
+                                    User.courseDelete(data.id).then((res) => {
+                                      if (res.data.success === true) {
+                                        toaster.success(
+                                          "코스 삭제 완료되었습니다.",
+                                          { duration: 3 }
+                                        );
+                                      } else {
+                                        toaster.warning(
+                                          "에러가 발생해 코스 삭제를 실패 했습니다.",
+                                          {
+                                            duration: 3,
+                                          }
+                                        );
+                                      }
+                                      setIsShownFalse();
+                                    });
+                                  }}
+                                >
+                                  예, 삭제하겠습니다.
+                                </Button>
+                              </div>
+                            ),
+                          });
+                          setIsShown(true);
                         }}
                       >
                         삭제
@@ -232,7 +271,6 @@ function Table({
                             ),
                           });
                           setIsShown(true);
-                          User.cancleRegCourse(data.id);
                         }}
                       >
                         신청취소

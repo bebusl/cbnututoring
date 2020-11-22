@@ -71,7 +71,7 @@ const App = (props) => {
   useEffect(() => {
     axios
       .get("/api/systems")
-      .then((res) => window.localStorage.setItem(res))
+      .then((res) => console.log(res))
       .catch((error) => console.log(error));
   }, []);
 
@@ -155,8 +155,12 @@ const App = (props) => {
               </div>
             )}
           </nav>
+          <div className="selectMenu">
+            <Link to="/tutor/student/alllist">학부생 튜터링</Link>
+            <Link to="/ta/student/alllist">TA</Link>
+          </div>
 
-          <div className="container mt-3">
+          <div className="container">
             <Switch>
               <Route exact path={["/", "/home"]} component={Home} />
               <Route exact path="/login" component={Login}>
@@ -196,15 +200,6 @@ const App = (props) => {
                   </Route>
                 ))}
             </Switch>
-          </div>
-
-          <div className="selectMenu">
-            <Button className="selectButton">
-              <Link to="/tutor/student/alllist">학부생 튜터링</Link>
-            </Button>
-            <Button className="selectButton">
-              <Link to="/ta/student/alllist">TA</Link>
-            </Button>
           </div>
         </div>
       </UserData.Provider>

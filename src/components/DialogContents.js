@@ -131,7 +131,7 @@ const CourseModify = ({ onSubmit, data }) => {
       >
         <ul>
           <li>
-            년도{" "}
+            <label htmlFor="year">년도</label>
             <select name="year" value={values.year} onChange={handleChange}>
               <option value={2020} key={2020}>
                 2020
@@ -143,7 +143,7 @@ const CourseModify = ({ onSubmit, data }) => {
             </select>
           </li>
           <li>
-            학기
+            <label htmlFor="semester">학기</label>
             <select
               name="semester"
               value={values.semester}
@@ -154,7 +154,7 @@ const CourseModify = ({ onSubmit, data }) => {
             </select>
           </li>
           <li>
-            소속
+            <label htmlFor="department">소속</label>
             <select name="department" onChange={handleChange}>
               <option value="0">컴퓨터공학과</option>
               <option value="1">소프트웨어학과</option>
@@ -163,7 +163,7 @@ const CourseModify = ({ onSubmit, data }) => {
             </select>
           </li>
           <li>
-            학년
+            <label htmlFor="grade">학년</label>
             <select name="grade" onChange={handleChange}>
               <option value="1">1학년</option>
               <option value="2">2학년</option>
@@ -172,7 +172,7 @@ const CourseModify = ({ onSubmit, data }) => {
             </select>
           </li>
           <li>
-            교과목명
+            <label htmlFor="courseName">교과목명</label>
             <input
               type="text"
               name="courseName"
@@ -182,7 +182,7 @@ const CourseModify = ({ onSubmit, data }) => {
           </li>
 
           <li>
-            담당교수
+            <label htmlFor="professorName">담당교수</label>
             <input
               type="text"
               name="professorName"
@@ -191,7 +191,7 @@ const CourseModify = ({ onSubmit, data }) => {
             ></input>
           </li>
           <li>
-            튜터명
+            <label htmlFor="tutorName">튜터이름</label>
             <input
               type="text"
               name="tutorName"
@@ -200,7 +200,7 @@ const CourseModify = ({ onSubmit, data }) => {
             ></input>
           </li>
           <li>
-            튜터학번
+            <label htmlFor="tutorNumber">튜터학번</label>
             <input
               type="text"
               name="tutorNumber"
@@ -209,7 +209,7 @@ const CourseModify = ({ onSubmit, data }) => {
             ></input>
           </li>
           <li>
-            최대인원
+            <label htmlFor="limit">최대인원</label>
             <input
               type="text"
               name="limit"
@@ -218,7 +218,7 @@ const CourseModify = ({ onSubmit, data }) => {
             ></input>
           </li>
           <li>
-            운영계획서
+            <label htmlFor="file">운영계획서</label>
             <input
               type="file"
               name="file"

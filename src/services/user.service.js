@@ -35,35 +35,33 @@ const registrationInfo = () => {
 };
 
 const cancleRegCourse = (id) => {
-  return axios
-    .get("/api/" + `registration/delete/${id}`)
-    .then((response) => console.log(response))
-    .catch((error) => console.log("코스취소 에러 ", error));
+  return axios.get("/api/" + `registration/delete/${id}`);
 };
 
 const regCourse = (id) => {
-  axios
-    .post("/api/" + `registration/register`, { courseId: id })
-    .then((response) => {
-      console.log("코스 등록신청", response);
-      window.alert("코스신청 완료");
-    })
-    .catch((error) => console.log("코스 등록신청 에러 ", error));
+  return axios.post("/api/" + `registration/register`, { courseId: id });
+};
+
+const courseModify = (data) => {
+  return axios({
+    url: "/api/courses/modify",
+    method: "POST",
+    data: data,
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 };
 
 const reportUpload = (sendForm) => {
-  axios({
-    url: "/api/" + "reports/upload",
+  return axios({
+    url: "/api/reports/upload",
     method: "POST",
     data: sendForm,
     headers: {
       "Content-Type": "multipart/form-data",
     },
-  })
-    .then(function (response) {
-      console.log("레포트등록 : ", response);
-    })
-    .catch((error) => console.log("레포트등록 에러 : ", error.response));
+  });
 };
 
 const getReports = () => {
@@ -82,4 +80,5 @@ export default {
   regCourse,
   reportUpload,
   getReports,
+  courseModify,
 };

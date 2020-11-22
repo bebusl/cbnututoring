@@ -1,11 +1,13 @@
 import React, { useContext, useState } from "react";
 import { UserData } from "../App";
-import CourseReg from "./CourseReg";
-import { Table as TableUI, Button, Dialog, Pane } from "evergreen-ui";
+import { Table as TableUI, Button, Dialog, Pane, toaster } from "evergreen-ui";
+import DialogContents from "./DialogContents";
 import User from "../services/user.service";
-import fileDownload from "file-saver";
+import Axios from "axios";
+const fileDownload = require("js-file-download");
 
 const departmentList = ["컴퓨터공학과", "소프트웨어", "정보통신", "로봇"];
+
 function Table({
   datas,
   isAllList = false,
@@ -17,29 +19,21 @@ function Table({
   const [dialog, setDialog] = useState({
     title: "",
     confirmLabel: "",
-    content: {},
-  });
-  const [values, setValues] = useState({
-    year: "2020",
-    semester: "1",
-    department: "0",
-    courseName: "",
-    professorName: "",
-    tutorName: "",
-    tutorNumber: "",
-    limit: "",
-    file: "",
+    content: "",
   });
 
-  const handleDialog = (name, value) => {
-    setDialog(Object.assign({}, dialog, { [name]: value }));
-    console.log(dialog);
+  const handleDialog = (newcontent) => {
+    setDialog(Object.assign({}, dialog, newcontent));
+  };
+
+  const setIsShownFalse = () => {
+    //console.log("상위컴포넌트로 넘기기 되나? ", text);//이게 되네 ㅎ
+    setIsShown(false);
   };
   //if (datas.tutorNumber === userData.studentNumber) {
   //  console.log("나 튜터임");
   //}
   //        <CourseReg years={[2020, 2021]}></CourseReg>
-
   return (
     <Pane>
       <Dialog
@@ -49,8 +43,9 @@ function Table({
           setIsShown(false);
         }}
         confirmLabel={dialog.confirmLabel}
+        hasFooter={false}
       >
-        {dialog.data}
+        {dialog.content}
       </Dialog>
       <TableUI>
         <TableUI.Head>
@@ -76,7 +71,7 @@ function Table({
                 <TableUI.TextCell>
                   {departmentList[data.department]}
                 </TableUI.TextCell>
-                <TableUI.TextCell>{data.tutorNumber}</TableUI.TextCell>
+                <TableUI.TextCell>{data.grade}</TableUI.TextCell>
                 <TableUI.TextCell>{data.courseName}</TableUI.TextCell>
                 <TableUI.TextCell>{data.professorName}</TableUI.TextCell>
                 <TableUI.TextCell>{data.tutorName}</TableUI.TextCell>
@@ -90,24 +85,75 @@ function Table({
                       <Button
                         appearance="minimal"
                         onClick={() => {
-                          User.regCourse(data.id);
+                          Axios({
+                            url: `/api/courses/download/${data.fileId}`,
+                            method: "GET",
+                            responseType: "blob",
+                          })
+                            .then((res) => {
+                              fileDownload(
+                                res.data,
+                                `${decodeURIComponent(
+                                  res.headers["file-name"]
+                                )}`
+                              );
+                            })
+                            .catch((error) => console.log(error));
                         }}
                       >
-                        수강신청
+                        운영 계획서
                       </Button>
                       {data.tutorNumber === userData._id ? (
                         <Button
                           appearance="minimal"
                           onClick={() => {
-                            handleDialog("title", "보고서 등록");
-                            handleDialog("confirmLabel", "등록");
+                            handleDialog({
+                              title: "보고서 등록",
+                              confirmLabel: "등록",
+                              content: (
+                                <DialogContents.ReportReg
+                                  data={data.id}
+                                  onSubmit={setIsShownFalse}
+                                />
+                              ),
+                            });
 
                             setIsShown(true);
                           }}
                         >
                           보고서등록
                         </Button>
-                      ) : undefined}
+                      ) : (
+                        <Button
+                          appearance="minimal"
+                          onClick={() => {
+                            if (data.appliedCount < data.limit) {
+                              handleDialog({
+                                title: "수강신청",
+                                confirmLabel: "신청",
+                                content: (
+                                  <DialogContents.Enrolment
+                                    data={data}
+                                    onSubmit={setIsShownFalse}
+                                    readOnly
+                                  />
+                                ),
+                              });
+                              setIsShown(true);
+                            } else {
+                              toaster.warning(
+                                "인원이 초과되어 신청할 수 없습니다.",
+                                {
+                                  duration: 3,
+                                }
+                              );
+                            }
+                            //User.regCourse(data.id);
+                          }}
+                        >
+                          수강신청
+                        </Button>
+                      )}
                     </>
                   ) : undefined}
                   {isCourseManage ? (
@@ -115,6 +161,17 @@ function Table({
                       <Button
                         appearance="minimal"
                         onClick={() => {
+                          handleDialog({
+                            title: "강좌 수정",
+                            confirmLabel: "수정",
+                            content: (
+                              <DialogContents.CourseModify
+                                data={data}
+                                onSubmit={setIsShownFalse}
+                              />
+                            ),
+                          });
+
                           setIsShown(true);
                         }}
                       >
@@ -135,7 +192,46 @@ function Table({
                       <Button
                         appearance="minimal"
                         onClick={() => {
-                          console.log(data);
+                          handleDialog({
+                            title: "수강 신청 취소",
+                            confirmLabel: "취소",
+                            content: (
+                              <div>
+                                <p>
+                                  {data.courseName}과목의 수강을
+                                  취소하시겠습니까?
+                                </p>
+                                <Button onClick={() => setIsShownFalse()}>
+                                  아니오
+                                </Button>
+                                <Button
+                                  onClick={() => {
+                                    User.cancleRegCourse(data.id).then(
+                                      (res) => {
+                                        if (res.data.success === true) {
+                                          toaster.success(
+                                            "수강 취소 완료되었습니다.",
+                                            { duration: 3 }
+                                          );
+                                        } else {
+                                          toaster.warning(
+                                            "에러가 발생해 수강 취소를 하지 못했습니다.",
+                                            {
+                                              duration: 3,
+                                            }
+                                          );
+                                        }
+                                        setIsShownFalse();
+                                      }
+                                    );
+                                  }}
+                                >
+                                  예, 수강 취소하겠습니다.
+                                </Button>
+                              </div>
+                            ),
+                          });
+                          setIsShown(true);
                           User.cancleRegCourse(data.id);
                         }}
                       >

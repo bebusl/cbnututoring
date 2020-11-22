@@ -68,6 +68,13 @@ const App = (props) => {
     });
   };
 
+  useEffect(() => {
+    axios
+      .get("/api/systems")
+      .then((res) => window.localStorage.setItem(res))
+      .catch((error) => console.log(error));
+  }, []);
+
   useEffect((props) => {
     /*async function fetchData(props, option) {
       await AuthCheck(props, option).then((res) => {
@@ -80,7 +87,6 @@ const App = (props) => {
     fetchData(props, false);
     console.log(loginStatus, userData);*/
     //console.log(AuthCheck(props, false));
-    console.log("나 새로고침중");
     axios.get("/api/accounts/auth").then((res) => {
       const data = res.data;
       if (data.success !== loginStatus) {
@@ -92,7 +98,7 @@ const App = (props) => {
   });
 
   const logOut = async () => {
-    let out = await AuthService.logout();
+    await AuthService.logout();
     setLoginStatus(false);
   };
 
@@ -102,7 +108,7 @@ const App = (props) => {
         <div>
           <nav className="navbar navbar-expand navbar-dark bg-dark">
             <Link to={"/"} className="navbar-brand">
-              SW중심대학사업단 Keep-UpⓇ 관리 시스템
+              충북대학교 SW중심대학사업단 Keep-UpⓇ 관리 시스템
             </Link>
             <div className="navbar-nav mr-auto">
               <li className="nav-item">
@@ -163,7 +169,7 @@ const App = (props) => {
               {loginStatus &&
                 studentNav.map((url, idx) => {
                   return (
-                    <Route exact path={`/tutor/student${url.to}`}>
+                    <Route exact path={`/tutor/student${url.to}`} key={idx}>
                       {!loginStatus ? props.history.push("/login") : undefined}
                       <div className="menu">
                         {loginStatus && <Menu program={program} />}
@@ -178,7 +184,7 @@ const App = (props) => {
                 })}
               {loginStatus &&
                 adminNav.map((url, idx) => (
-                  <Route exact path={`/tutor/admin${url.to}`}>
+                  <Route exact path={`/tutor/admin${url.to}`} key={idx}>
                     <div className="menu">
                       {loginStatus && <Menu program={program} />}
                     </div>
@@ -189,13 +195,12 @@ const App = (props) => {
                     </div>
                   </Route>
                 ))}
-              <Redirect path="*" to="/login"></Redirect>
             </Switch>
           </div>
 
           <div className="selectMenu">
             <Button className="selectButton">
-              <Link to="/tutor/student/alllist">튜터링</Link>
+              <Link to="/tutor/student/alllist">학부생 튜터링</Link>
             </Button>
             <Button className="selectButton">
               <Link to="/ta/student/alllist">TA</Link>

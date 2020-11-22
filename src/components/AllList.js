@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Table from "./Table";
 import axios from "axios";
 
@@ -9,10 +9,29 @@ const AllList = ({ years, isCourseManage = false }) => {
   const isAlllist = !isCourseManage;
   console.log("isAllList?", isAlllist, isCourseManage);
 
+  /*useEffect(() => {
+    console.log("이때만해도 되겠닝..?");
+    const tempYear = window.localStorage.getItem("year");
+    const tempSemester = window.localStorage.getItem("semester");
+    console.log(tempYear, tempSemester);
+    if (
+      tempYear !== null &&
+      tempYear !== year &&
+      tempSemester !== null &&
+      tempSemester !== semester
+    ) {
+      setYear(tempYear);
+      setSemester(tempSemester);
+    }
+    console.log("useEffect이후 year, semester", year, semester);
+  })
+*/
   const yearChange = (e) => {
     if (e.target.name === "year") {
       setYear(e.target.value);
-    } else setSemester(e.target.value);
+    } else {
+      setSemester(e.target.value);
+    }
   };
 
   const search = (e) => {
@@ -27,6 +46,8 @@ const AllList = ({ years, isCourseManage = false }) => {
       .catch((error) => {
         console.log("erer : ", error.response);
       });
+    window.localStorage.setItem("year", year);
+    window.localStorage.setItem("semester", semester);
   };
 
   return (
@@ -34,15 +55,17 @@ const AllList = ({ years, isCourseManage = false }) => {
       <form onSubmit={search}>
         <p>
           년도{" "}
-          <select name="year" onChange={yearChange}>
+          <select name="year" value={year} onChange={yearChange}>
             {years.map((year) => (
-              <option value={year}>{year}</option>
+              <option value={year} key={year}>
+                {year}
+              </option>
             ))}
           </select>
         </p>
         <p>
           학기{" "}
-          <select name="semester" onChange={yearChange}>
+          <select name="semester" value={semester} onChange={yearChange}>
             <option value="1">1</option>
             <option value="2">2</option>
           </select>

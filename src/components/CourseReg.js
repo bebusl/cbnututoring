@@ -40,7 +40,6 @@ function useForm({ initialValues, onSubmit, validate }) {
         }
       })
       .catch((error) => window.alert("코스 등록 실패"));
-    await new Promise((r) => setTimeout(r, 1000));
   };
 
   return {
@@ -58,6 +57,7 @@ export default function CourseReg({ years }) {
       year: "2020",
       semester: "1",
       department: "0",
+      grade: "1",
       courseName: "",
       professorName: "",
       tutorName: "",
@@ -75,7 +75,9 @@ export default function CourseReg({ years }) {
             년도{" "}
             <select name="year" onChange={handleChange}>
               {years.map((year) => (
-                <option value={year}>{year}</option>
+                <option value={year} key={year}>
+                  {year}
+                </option>
               ))}
             </select>
           </li>
@@ -94,6 +96,15 @@ export default function CourseReg({ years }) {
               <option value="2">정보통신공학부</option>
               <option value="3">지능로봇학과</option>
             </select>{" "}
+          </li>
+          <li>
+            학년
+            <select name="grade" onChange={handleChange}>
+              <option value="1">1학년</option>
+              <option value="2">2학년</option>
+              <option value="3">3학년</option>
+              <option value="4">4학년</option>
+            </select>
           </li>
           <li>
             교과목명

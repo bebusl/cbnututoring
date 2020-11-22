@@ -24,7 +24,7 @@ const User = () => {
         <TextInput name="_id" value={userData._id} disabled />
       </Pane>
       <Pane>
-        현재 비밀번호 <TextInput name="password" value={userData.password} />
+        현재 비밀번호 <TextInput name="password" />
       </Pane>
       <Pane>
         새 비밀번호 <TextInput name="newPassword"></TextInput>
@@ -38,7 +38,7 @@ const User = () => {
       </Pane>
       <Pane>
         이메일
-        <TextInput name="newPasswordCheck" value={userData.name}></TextInput>
+        <TextInput name="newPasswordCheck" value={userData.email}></TextInput>
       </Pane>
     </Pane>
   );

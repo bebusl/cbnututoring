@@ -46,24 +46,27 @@ function Menu(props, { program }) {
 
   return (
     <div className="navigation">
-      <MenuUI title={Navtitle[program]}>
-        <MenuUI.Group title="학생">
-          {studentNav.map((nav, index) => {
-            return (
-              <MenuUI.Item key={index}>
-                <NavLink exact to={`/tutor/student${nav.to}`}>
-                  {nav.title}
-                </NavLink>
-              </MenuUI.Item>
-            );
-          })}
-        </MenuUI.Group>
+      <MenuUI>
+        {Navtitle[program]}
+        {userData.role !== 3 ? (
+          <MenuUI.Group title="학생">
+            {studentNav.map((nav, index) => {
+              return (
+                <MenuUI.Item key={index}>
+                  <NavLink exact to={`/tutor/student${nav.to}`}>
+                    {nav.title}
+                  </NavLink>
+                </MenuUI.Item>
+              );
+            })}
+          </MenuUI.Group>
+        ) : undefined}
         <MenuUI.Divider />
         {userData.role === 3 ? (
           <MenuUI.Group title="관리자">
             {adminNav.map((nav, index) => {
               return (
-                <MenuUI.Item>
+                <MenuUI.Item key={index}>
                   <NavLink exact to={`/tutor/admin${nav.to}`}>
                     {nav.title}
                   </NavLink>

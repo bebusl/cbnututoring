@@ -27,7 +27,9 @@ const EnrolmentSeason = (props) => {
           년도{" "}
           <select name="year" onChange={handleChange}>
             {props.years.map((year) => (
-              <option value={year}>{year}</option>
+              <option value={year} key={year}>
+                {year}
+              </option>
             ))}
           </select>
         </p>

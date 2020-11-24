@@ -7,25 +7,20 @@ const AllList = ({ years, isCourseManage = false }) => {
   const [semester, setSemester] = useState(1);
   const [datas, setDatas] = useState();
   const isAlllist = !isCourseManage;
-  console.log("isAllList?", isAlllist, isCourseManage);
 
-  /*useEffect(() => {
-    console.log("이때만해도 되겠닝..?");
+  useEffect(() => {
     const tempYear = window.localStorage.getItem("year");
     const tempSemester = window.localStorage.getItem("semester");
-    console.log(tempYear, tempSemester);
-    if (
-      tempYear !== null &&
-      tempYear !== year &&
-      tempSemester !== null &&
-      tempSemester !== semester
-    ) {
+    if (tempYear !== null && tempYear !== year) {
       setYear(tempYear);
+    }
+    if (tempSemester !== null && tempSemester !== semester) {
       setSemester(tempSemester);
     }
-    console.log("useEffect이후 year, semester", year, semester);
-  })
-*/
+
+    search();
+  }, []);
+
   const yearChange = (e) => {
     if (e.target.name === "year") {
       setYear(e.target.value);
@@ -34,25 +29,30 @@ const AllList = ({ years, isCourseManage = false }) => {
     }
   };
 
-  const search = (e) => {
+  const handleOnSubmit = (e) => {
     e.preventDefault();
-    console.log(year, " ", semester);
-    axios
-      .get(`/api/courses/find/${year}/${semester}`)
-      .then(function (response) {
-        console.log("검색결과", response);
-        setDatas(response.data.courseData);
-      })
-      .catch((error) => {
-        console.log("erer : ", error.response);
-      });
+    search();
     window.localStorage.setItem("year", year);
     window.localStorage.setItem("semester", semester);
   };
 
+  const search = () => {
+    axios
+      .get(`/api/courses/find/${year}/${semester}`)
+      .then(function (response) {
+        console.log("검색결과", response);
+        if (response.data.courseData !== datas) {
+          setDatas(response.data.courseData);
+        }
+      })
+      .catch((error) => {
+        console.log("erer : ", error);
+      });
+  };
+
   return (
     <div>
-      <form onSubmit={search}>
+      <form onSubmit={handleOnSubmit}>
         <div className="dateWrap">
           <div className="yearWrap">
             년도{" "}
@@ -79,6 +79,8 @@ const AllList = ({ years, isCourseManage = false }) => {
         datas={datas}
         isAllList={isAlllist}
         isCourseManage={isCourseManage}
+        year={year}
+        semester={semester}
       ></Table>
     </div>
   );

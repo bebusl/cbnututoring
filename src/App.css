@@ -134,3 +134,12 @@ body{
   margin:0;
 
 }
+
+.customTable{
+  text-align: center;
+  font-size: 2rem;
+}
+
+.ub-fnt-sze_12px{
+  font-size: 12px;
+}

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { TextInput, TextInputField, Pane } from "evergreen-ui";
+import { TextInput, TextInputField, Pane, Button } from "evergreen-ui";
 import { UserData } from "../App";
 
 const department = [
@@ -17,29 +17,26 @@ const User = () => {
       flexDirection="column"
       alignItems="center"
       justifyContent=" center"
-      width={2500}
+      width="auto"
+      padding="40px"
+      backgroundColor="#ffffff"
     >
-      <Pane>
-        학번
-        <TextInput name="_id" value={userData._id} disabled />
-      </Pane>
-      <Pane>
-        현재 비밀번호 <TextInput name="password" />
-      </Pane>
-      <Pane>
-        새 비밀번호 <TextInput name="newPassword"></TextInput>
-      </Pane>
-      <Pane>
-        새 비밀번호 확인<TextInput name="newPasswordCheck"></TextInput>
-      </Pane>
-      <Pane>
-        이름
-        <TextInput name="newPasswordCheck" value={userData.name}></TextInput>
-      </Pane>
-      <Pane>
-        이메일
-        <TextInput name="newPasswordCheck" value={userData.email}></TextInput>
-      </Pane>
+      <h4>회원정보 수정</h4>
+      <label htmlFor="_id">학번</label>
+      <TextInput name="_id" value={userData._id} disabled />
+      <label htmlFor="newPassword">새 비밀번호</label>
+      <TextInput name="newPassword"></TextInput>
+      <label htmlFor="newPassword"></label>새 비밀번호 확인
+      <TextInput name="newPasswordCheck"></TextInput>
+      <label htmlFor="name">이름</label>
+      <TextInput name="name" value={userData.name}></TextInput>
+      <label htmlFor="email">이메일</label>
+      <TextInput name="email" value={userData.email}></TextInput>
+      <label htmlFor="phoneNumber">휴대폰번호</label>
+      <TextInput name="phoneNumber" value={userData.phoneNumber}></TextInput>
+      <label htmlFor="department">학과</label>
+      <TextInput name="department" value={userData.department}></TextInput>
+      <Button type="submit">수정</Button>
     </Pane>
   );
 };
@@ -52,7 +49,7 @@ iat: 1605776710
 id: 3
 isAdmin: false
 name: "이진희"
-phoneNumber: "010-9061-6840"
+department: "010-9061-6840"
 role: 0
 _id: "2018037004"
 __proto__: Object */

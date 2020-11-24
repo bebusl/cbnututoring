@@ -9,21 +9,14 @@ const week = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 const Enrolment = ({ onSubmit, data }) => {
   const { userData } = useContext(UserData);
   console.log("Enrolment : ", userData, data);
-  useEffect(() => {
-    //User.regCourse(data.id)
-    //.then((res) => {
-    //객체가 어떤식으로 오는 지 모르겠어가지궁.
-    //}) //이 때 find 찾긩..
-    //.catch((error) => console.log(error));
-    //이걸 밑에 return 부분으로 옮기기!, 리미트 설정!
-  }, []); //첫 렌더링 시 실행
   const onenrolmentSubmit = () => {
     User.regCourse(data.id)
       .then((res) => {
         if (res.data.success === true) {
           toaster.success("코스 등록에 성공했습니다.", {
-            duration: 5,
+            duration: 3,
           });
+          window.location.reload(false);
         } else {
           toaster.danger("코스 등록에 실패했습니다.", {
             duration: 5,
@@ -106,6 +99,7 @@ const CourseModify = ({ onSubmit, data }) => {
           toaster.success("코스 수정에 성공했습니다.", {
             duration: 3,
           });
+          window.location.reload(false);
         } else {
           toaster.danger("코스 수정에 실패했습니다.", {
             duration: 3,
@@ -259,6 +253,7 @@ const ReportReg = ({ onSubmit, data }) => {
     User.reportUpload(sendForm)
       .then((res) => {
         if (res.data.success === true) {
+          console.log(res);
           toaster.success("보고서 등록에 성공했습니다.", {
             duration: 3,
           });

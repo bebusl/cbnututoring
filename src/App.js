@@ -162,7 +162,7 @@ const App = (props) => {
 
           <div className="container">
             <Switch>
-              <Route exact path={["/", "/home"]} component={Home} />
+              <Route exact path={["/", "/home"]} component={Login} />
               <Route exact path="/login" component={Login}>
                 {loginStatus ? <Redirect to="/user" /> : undefined}
               </Route>

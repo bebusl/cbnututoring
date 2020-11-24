@@ -9,9 +9,7 @@ const MyList = ({ years }) => {
     axios
       .get(`/api/registration/`)
       .then(function (response) {
-        console.log("마이리스트검색결과", response);
         if (response.data.result !== datas) {
-          console.log(response.data.result, datas);
           setDatas(response.data.result);
         }
       })

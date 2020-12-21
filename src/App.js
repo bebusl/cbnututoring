@@ -8,7 +8,6 @@ import AuthService from "./services/auth.service";
 import Menu from "./components/Menu";
 import Login from "./components/Login";
 import Register from "./components/Register";
-import Home from "./components/Home";
 import ProgramSelect from "./components/ProgramSelect";
 import AllList from "./components/AllList";
 import MyList from "./components/MyList";
@@ -24,9 +23,9 @@ export const UserData = createContext();
 const program = "tutor";
 const start_year = "2020";
 const today = new Date();
-const today_year = today.getFullYear() + 1;
+//const today_year = today.getFullYear() + 1;
 let years = [];
-for (var y = start_year; y <= today_year; y++) {
+for (var y = start_year; y <= 2026; y++) {
   years.push(y);
 }
 const studentNav = [
@@ -34,26 +33,30 @@ const studentNav = [
   {
     title: "내 수강 목록",
     to: "/mylist",
-    component: <MyList years={years} />,
+    component: (props) => <MyList years={years} {...props} />,
   },
 ];
 const adminNav = [
   {
     title: "강좌 등록",
     to: "/coursereg",
-    component: <CourseReg years={years} />,
+    component: (props) => <CourseReg years={years} {...props} />,
   },
   {
     title: "강좌 관리",
     to: "/coursemanage",
-    component: <CourseManage years={years} />,
+    component: (props) => <CourseManage years={years} {...props} />,
   },
   {
     title: "수강신청 기간 설정",
     to: "/enrolmentseason",
-    component: <EnrolmentSeason years={years} />,
+    component: (props) => <EnrolmentSeason years={years} {...props} />,
   },
-  { title: "보고서 관리", to: "/report", component: <Report /> },
+  {
+    title: "보고서 관리",
+    to: "/report",
+    component: (props) => <Report {...props} />,
+  },
 ];
 
 const App = (props) => {
@@ -111,12 +114,6 @@ const App = (props) => {
               충북대학교 SW중심대학사업단 Keep-UpⓇ 관리 시스템
             </Link>
             <div className="navbar-nav mr-auto">
-              <li className="nav-item">
-                <Link to={"/home"} className="nav-link">
-                  Home
-                </Link>
-              </li>
-
               {loginStatus && (
                 <li className="nav-item">
                   <Link to={"/user"} className="nav-link">
@@ -156,8 +153,12 @@ const App = (props) => {
             )}
           </nav>
           <div className="selectMenu">
-            <Link to="/tutor/student/alllist">학부생 튜터링</Link>
-            <Link to="/ta/student/alllist">TA</Link>
+            <button>
+              <Link to="/tutor/student/alllist">학부생 튜터링</Link>
+            </button>
+            <button>
+              <Link to="/ta/student/alllist">TA</Link>
+            </button>
           </div>
 
           <div className="container">
@@ -188,16 +189,25 @@ const App = (props) => {
                 })}
               {loginStatus &&
                 adminNav.map((url, idx) => (
-                  <Route exact path={`/tutor/admin${url.to}`} key={idx}>
-                    <div className="menu">
-                      {loginStatus && <Menu program={program} />}
-                    </div>
+                  <Route
+                    exact
+                    path={`/tutor/admin${url.to}`}
+                    key={idx}
+                    render={(props) => {
+                      return (
+                        <>
+                          <div className="menu">
+                            {loginStatus && <Menu program={program} />}
+                          </div>
 
-                    <div className="main-column">
-                      <h3>{url.title}</h3>
-                      {url.component}
-                    </div>
-                  </Route>
+                          <div className="main-column">
+                            <h3>{url.title}</h3>
+                            {url.component(props)}
+                          </div>
+                        </>
+                      );
+                    }}
+                  />
                 ))}
             </Switch>
           </div>

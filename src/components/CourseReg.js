@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { Redirect } from "react-router-dom";
+import { toaster } from "evergreen-ui";
 import axios from "axios";
 
-function useForm({ initialValues, onSubmit, validate }) {
+function useForm({ initialValues, history }) {
   const [values, setValues] = useState(initialValues);
   const [submitting, setSubmitting] = useState(false);
 
@@ -14,6 +16,8 @@ function useForm({ initialValues, onSubmit, validate }) {
     setValues({ ...values, ["file"]: e.target.files[0] });
   };
 
+  const duplicateInspection = () => {}; //강좌 중복된거없나 검사.
+
   const handleSubmit = async (event) => {
     setSubmitting(true);
     event.preventDefault();
@@ -23,7 +27,7 @@ function useForm({ initialValues, onSubmit, validate }) {
       sendForm.append(i, values[i]);
     }
 
-    axios({
+    await axios({
       url: "/api/courses/register",
       method: "POST",
       data: sendForm,
@@ -34,12 +38,13 @@ function useForm({ initialValues, onSubmit, validate }) {
       .then(function (response) {
         console.log("코스등록 이벤트 : ", response);
         if (response.data.success === true) {
-          window.alert("코스 등록 성공");
+          toaster.success("강좌 등록을 성공했습니다.");
+          history.push("/tutor/admin/coursemanage");
         } else {
-          window.alert("코스 등록 실패");
+          toaster.danger("강좌 등록을 실패했습니다.");
         }
       })
-      .catch((error) => window.alert("코스 등록 실패"));
+      .catch((error) => toaster.danger("에러가 발생했습니다." + error));
   };
 
   return {
@@ -51,7 +56,7 @@ function useForm({ initialValues, onSubmit, validate }) {
   };
 }
 
-export default function CourseReg({ years }) {
+export default function CourseReg({ years, history }) {
   const { handleChange, handleSubmit, handleFileChange } = useForm({
     initialValues: {
       year: "2020",
@@ -65,6 +70,7 @@ export default function CourseReg({ years }) {
       limit: "",
       file: "",
     },
+    history,
   });
 
   return (
@@ -99,7 +105,7 @@ export default function CourseReg({ years }) {
               <option value="0">컴퓨터공학과</option>
               <option value="1">소프트웨어학과</option>
               <option value="2">정보통신공학부</option>
-              <option value="3">지능로봇학과</option>
+              <option value="3">지능로봇공학과</option>
             </select>{" "}
           </li>
           <li>

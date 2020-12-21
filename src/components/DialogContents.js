@@ -1,10 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { UserData } from "../App";
 import { TextInputField, Button, toaster, Select } from "evergreen-ui";
+import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import User from "../services/user.service";
+import Axios from "axios";
 
 const department = ["컴퓨터공학과", "소프트웨어학과", "정보통신학과", "로봇"];
 const week = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+const year = [2020, 2021, 2022, 2023, 2024, 2025, 2026];
 
 const Enrolment = ({ onSubmit, data }) => {
   const { userData } = useContext(UserData);
@@ -127,12 +130,11 @@ const CourseModify = ({ onSubmit, data }) => {
           <li>
             <label htmlFor="year">년도</label>
             <select name="year" value={values.year} onChange={handleChange}>
-              <option value={2020} key={2020}>
-                2020
-              </option>
-              <option value={2021} key={2021}>
-                2021
-              </option>
+              {year.map((year) => (
+                <option value={year} key={year}>
+                  {year}
+                </option>
+              ))}
               ))
             </select>
           </li>
@@ -153,7 +155,7 @@ const CourseModify = ({ onSubmit, data }) => {
               <option value="0">컴퓨터공학과</option>
               <option value="1">소프트웨어학과</option>
               <option value="2">정보통신공학부</option>
-              <option value="3">지능로봇학과</option>
+              <option value="3">지능로봇공학과</option>
             </select>
           </li>
           <li>
@@ -297,4 +299,53 @@ const ReportReg = ({ onSubmit, data }) => {
 };
 /*user정보는 context에서 들고옴. 그 외에 정보는 props로 전달 받음 user정보에 있는건 바로 출력되도록 하기*/
 
-export default { Enrolment, CourseModify, ReportReg };
+const StudentList = ({ onSubmit, data, year, semester }) => {
+  const [infos, setInfo] = useState([]);
+
+  useEffect(() => {
+    console.log("courseID", data);
+    Axios.post("/api/registration/get", { courseId: data.id })
+      .then((res) => {
+        console.log(res);
+        if (infos !== res.data.result) {
+          setInfo(res.data.result);
+        }
+      })
+      .catch((err) => console.log("에러" + err));
+  }, []);
+  return (
+    <>
+      <ReactHTMLTableToExcel
+        id="student-list-xls-button"
+        className="download-table-xls-button"
+        table="student-list-to-xls"
+        filename={`${year}_${semester}학기_${data.courseName}수강생`}
+        sheet="sheet1"
+        buttonText="수강생 목록 다운로드"
+      />
+      <table id="student-list-to-xls">
+        <thead>
+          <tr>
+            <th>학번</th>
+            <th>학과</th>
+            <th>이름</th>
+            <th>이메일</th>
+          </tr>
+        </thead>
+        <tbody>
+          {infos &&
+            infos.map((info) => (
+              <tr key={info.id}>
+                <td>{info._id}</td>
+                <td>{department[info.department]}</td>
+                <td>{info.name}</td>
+                <td>{info.email}</td>
+              </tr>
+            ))}
+        </tbody>
+      </table>
+    </>
+  );
+};
+
+export default { Enrolment, CourseModify, ReportReg, StudentList };

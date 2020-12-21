@@ -123,7 +123,7 @@ const Register = (props) => {
             error.message ||
             error.toString();
 
-          setMessage(resMessage);
+          setMessage("이미 가입되어 있는 회원입니다.");
           setSuccessful(false);
         }
       );
@@ -223,7 +223,7 @@ const Register = (props) => {
                   <option value="0">컴퓨터공학과</option>
                   <option value="1">소프트웨어학과</option>
                   <option value="2">정보통신공학과</option>
-                  <option value="3">지능로봇</option>
+                  <option value="3">지능로봇공학과</option>
                 </select>
               </div>
 

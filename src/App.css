@@ -108,6 +108,21 @@ button{
   border-radius: 10px;
 }
 
+
+
+#root > div> div.selectMenu > button{
+  background-color: rgba(52,58,64,0.1);
+  color:#343a40;
+  border : 1px solid #343a40;
+  border-radius: 10px;
+  margin-right: 0.3em;
+}
+#root > div > div.selectMenu > button > a{
+  color:#343a40;
+}
+
+
+
 .selectMenu{
   width:100%;
   height:auto;

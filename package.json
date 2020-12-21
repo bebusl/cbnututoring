@@ -17,11 +17,14 @@
     "js-file-download": "^0.4.12",
     "react": "^17.0.1",
     "react-dom": "^16.13.1",
+    "react-html-table-to-excel": "^2.0.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.0",
     "react-validation": "^3.0.7",
     "redux": "^4.0.5",
-    "validator": "^13.1.17"
+    "tableexport": "^5.2.0",
+    "validator": "^13.1.17",
+    "xlsx": "^0.16.9"
   },
   "scripts": {
     "start": "react-scripts start",

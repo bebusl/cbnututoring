@@ -88,7 +88,7 @@ const Login = (props) => {
 
         <Form onSubmit={handleLogin} ref={form}>
           <div className="form-group">
-            <label htmlFor="username">Username</label>
+            <label htmlFor="username">ID/학번</label>
             <Input
               type="text"
               className="form-control"
@@ -100,7 +100,7 @@ const Login = (props) => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">비밀번호</label>
             <Input
               type="password"
               className="form-control"
@@ -116,7 +116,7 @@ const Login = (props) => {
               {loading && (
                 <span className="spinner-border spinner-border-sm"></span>
               )}
-              <span>Login</span>
+              <span>로그인</span>
             </button>
           </div>
 

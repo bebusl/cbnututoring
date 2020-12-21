@@ -6,7 +6,7 @@ import { UserData, IsLogin } from "../App";
 function Menu(props) {
   const { userData } = useContext(UserData);
   const { loginStatus } = useContext(IsLogin);
-  const isAdminTest = true;
+
   const studentNav = [
     { title: "강좌 조회", to: "/alllist", component: <div>강좌 조회</div> },
     {
@@ -31,11 +31,6 @@ function Menu(props) {
   ];
 
   const Navtitle = { tutor: "학부생 튜터링", ta: "TA프로그램" };
-
-  const activeStyle = {
-    color: "green",
-    fontSize: "2rem",
-  };
 
   useEffect(() => {
     if (!loginStatus) {

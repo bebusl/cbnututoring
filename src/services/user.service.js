@@ -21,10 +21,7 @@ const courseRegister = (sendForm) => {
     .catch((error) => console.log("error : ", error.response));
 };
 const courseDelete = (id) => {
-  return axios
-    .get("/api/" + `courses/delete/${id}`)
-    .then((response) => console.log("코스정보 삭제"))
-    .catch((error) => console.log("코스 정보 삭제 에러 ", error));
+  return axios.get("/api/" + `courses/delete/${id}`);
 };
 
 const registrationInfo = () => {

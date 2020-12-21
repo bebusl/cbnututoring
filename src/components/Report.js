@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Table, Button } from "evergreen-ui";
+import { Table, Button, Select } from "evergreen-ui";
+import Axios from "axios";
+const fileDownload = require("js-file-download");
+const fileSaver = require("file-saver");
+
 function Report({ years }) {
   const [year, setYear] = useState(2020);
   const [semester, setSemester] = useState(1);
   const [datas, setDatas] = useState();
+  const [selectWeek, setWeek] = useState(1);
   const week = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
   const X = "X";
   const check = [X, X, X, X, X, X, X, X, X, X, X, X, X, X, X];
@@ -15,6 +20,25 @@ function Report({ years }) {
     } else {
       setSemester(e.target.value);
     }
+  };
+
+  const reportDown = (date, data) => {
+    console.log(data.fileId);
+    Axios({
+      url: `/api/reports/download`,
+      method: "POST",
+      responseType: "blob",
+      data: {
+        fileId: data.fileId,
+      },
+    })
+      .then((res) => {
+        fileDownload(
+          res.data,
+          `${decodeURIComponent(res.headers["file-name"])}`
+        );
+      })
+      .catch((err) => console.log(err));
   };
 
   useEffect(() => {
@@ -63,6 +87,11 @@ function Report({ years }) {
             <select name="year" value={year} onChange={yearChange}>
               <option value={2020}>2020</option>
               <option value={2021}>2021</option>
+              <option value={2022}>2022</option>
+              <option value={2023}>2023</option>
+              <option value={2024}>2024</option>
+              <option value={2025}>2025</option>
+              <option value={2026}>2026</option>
               ))
             </select>
           </div>
@@ -92,16 +121,69 @@ function Report({ years }) {
                 <Table.TextCell>{data.tutorName}</Table.TextCell>
                 {week.map((date) => (
                   <Table.TextCell key={(data.id, "-", date)}>
-                    {data.reports.some((e) => e.week === date) ? "O" : "X"}
+                    {data.reports.some((e) => e.week === date) ? (
+                      <Button
+                        onClick={() =>
+                          reportDown(
+                            date,
+                            data.reports.find(
+                              (element) => element.week === date
+                            )
+                          )
+                        }
+                      >
+                        O
+                      </Button>
+                    ) : (
+                      "X"
+                    )}
                   </Table.TextCell>
                 ))}
               </Table.Row>
             ))}
         </Table.Body>
       </Table>
-      <Button marginY={8} marginRight={12}>
-        보고서 다운
-      </Button>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          Axios({
+            url: `/api/reports/download/week`,
+            method: "POST",
+            responseType: "blob",
+            data: {
+              week: selectWeek,
+              year: year,
+              semester: semester,
+            },
+          })
+            .then((res) => {
+              console.log("집파일 맞나유~", res);
+              fileDownload(
+                res.data,
+                `${decodeURIComponent(res.headers["file-name"])}`
+              );
+            })
+            .catch((err) => console.log(err));
+        }}
+      >
+        <Select
+          value={selectWeek}
+          onChange={(event) => setWeek(event.target.value)}
+        >
+          {week.map((data) => (
+            <option value={data}>{data}</option>
+          ))}
+        </Select>
+        주차
+        <Button
+          onClick={(e) => e.preventDefault()}
+          type="submit"
+          marginY={8}
+          marginRight={12}
+        >
+          보고서 다운
+        </Button>
+      </form>
     </div>
   );
 }

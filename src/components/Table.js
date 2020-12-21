@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
+import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import { UserData } from "../App";
 import {
   Table as TableUI,
@@ -32,10 +33,13 @@ function Table({
     confirmLabel: "",
     content: "",
   });
+
   useEffect(() => {
     //push는
+
     Axios.get(`/api/systems/find/1/${year}/${semester}`)
       .then((res) => {
+        console.log("응답보슈", res);
         if (
           res.data.result.start > Date.now() ||
           Date.now() > res.data.result.end
@@ -128,101 +132,37 @@ function Table({
                     {data.appliedCount}
                   </TableUI.TextCell>
                 ) : undefined}
-                <TableUI.TextCell flexBasis={220} flexShrink={0} flexGrow={0}>
-                  {isAllList ? (
-                    <>
-                      <Button
-                        appearance="minimal"
-                        onClick={() => {
-                          Axios({
-                            url: `/api/courses/download/${data.fileId}`,
-                            method: "GET",
-                            responseType: "blob",
+                {isAllList ? (
+                  <TableUI.TextCell flexBasis={220} flexShrink={0} flexGrow={0}>
+                    <Button
+                      appearance="minimal"
+                      onClick={() => {
+                        Axios({
+                          url: `/api/courses/download/${data.fileId}`,
+                          method: "GET",
+                          responseType: "blob",
+                        })
+                          .then((res) => {
+                            fileDownload(
+                              res.data,
+                              `${decodeURIComponent(res.headers["file-name"])}`
+                            );
                           })
-                            .then((res) => {
-                              fileDownload(
-                                res.data,
-                                `${decodeURIComponent(
-                                  res.headers["file-name"]
-                                )}`
-                              );
-                            })
-                            .catch((error) => console.log(error));
-                        }}
-                      >
-                        운영 계획서
-                      </Button>
-                      {data.tutorNumber === userData._id ? (
-                        <Button
-                          appearance="minimal"
-                          onClick={() => {
-                            handleDialog({
-                              title: "보고서 등록",
-                              confirmLabel: "등록",
-                              content: (
-                                <DialogContents.ReportReg
-                                  data={data.id}
-                                  onSubmit={setIsShownFalse}
-                                />
-                              ),
-                            });
-
-                            setIsShown(true);
-                          }}
-                        >
-                          보고서등록
-                        </Button>
-                      ) : (
-                        <Button
-                          appearance="minimal"
-                          disabled={
-                            !accessSeason ||
-                            (mylistData &&
-                              mylistData.some((e) => e.id === data.id))
-                              ? true
-                              : false
-                          }
-                          onClick={() => {
-                            if (data.appliedCount < data.limit) {
-                              handleDialog({
-                                title: "수강신청",
-                                confirmLabel: "신청",
-                                content: (
-                                  <DialogContents.Enrolment
-                                    data={data}
-                                    onSubmit={setIsShownFalse}
-                                    readOnly
-                                  />
-                                ),
-                              });
-                              setIsShown(true);
-                            } else {
-                              toaster.warning(
-                                "인원이 초과되어 신청할 수 없습니다.",
-                                {
-                                  duration: 3,
-                                }
-                              );
-                            }
-                            //User.regCourse(data.id);
-                          }}
-                        >
-                          수강신청
-                        </Button>
-                      )}
-                    </>
-                  ) : undefined}
-                  {isCourseManage ? (
-                    <>
+                          .catch((error) => console.log(error));
+                      }}
+                    >
+                      운영 계획서
+                    </Button>
+                    {data.tutorNumber === userData._id ? (
                       <Button
                         appearance="minimal"
                         onClick={() => {
                           handleDialog({
-                            title: "강좌 수정",
-                            confirmLabel: "수정",
+                            title: "보고서 등록",
+                            confirmLabel: "등록",
                             content: (
-                              <DialogContents.CourseModify
-                                data={data}
+                              <DialogContents.ReportReg
+                                data={data.id}
                                 onSubmit={setIsShownFalse}
                               />
                             ),
@@ -231,24 +171,92 @@ function Table({
                           setIsShown(true);
                         }}
                       >
-                        수정
+                        보고서등록
                       </Button>
+                    ) : (
                       <Button
                         appearance="minimal"
+                        disabled={
+                          !accessSeason ||
+                          (mylistData &&
+                            mylistData.some((e) => e.id === data.id))
+                            ? true
+                            : false
+                        }
                         onClick={() => {
-                          handleDialog({
-                            title: "코스 삭제",
-                            confirmLabel: "삭제",
-                            content: (
-                              <div>
-                                <p>{data.courseName}과목을 삭제하시겠습니까?</p>
-                                <Button onClick={() => setIsShownFalse()}>
-                                  아니오
-                                </Button>
-                                <Button
-                                  intent="danger"
-                                  onClick={() => {
-                                    User.courseDelete(data.id).then((res) => {
+                          if (data.appliedCount < data.limit) {
+                            handleDialog({
+                              title: "수강신청",
+                              confirmLabel: "신청",
+                              content: (
+                                <DialogContents.Enrolment
+                                  data={data}
+                                  onSubmit={setIsShownFalse}
+                                  readOnly
+                                />
+                              ),
+                            });
+                            setIsShown(true);
+                          } else {
+                            console.log(
+                              "왜 안되는 거쥬",
+                              data.appliedCount,
+                              data.limit
+                            );
+                            toaster.warning(
+                              "인원이 초과되어 신청할 수 없습니다.",
+                              {
+                                duration: 3,
+                              }
+                            );
+                          }
+                          //User.regCourse(data.id);
+                        }}
+                      >
+                        수강신청
+                      </Button>
+                    )}
+                  </TableUI.TextCell>
+                ) : undefined}
+                {isCourseManage ? (
+                  <TableUI.TextCell flexBasis={250} flexShrink={0} flexGrow={0}>
+                    <Button
+                      appearance="minimal"
+                      onClick={() => {
+                        handleDialog({
+                          title: "강좌 수정",
+                          confirmLabel: "수정",
+                          content: (
+                            <DialogContents.CourseModify
+                              data={data}
+                              onSubmit={setIsShownFalse}
+                            />
+                          ),
+                        });
+
+                        setIsShown(true);
+                      }}
+                    >
+                      수정
+                    </Button>
+                    <Button
+                      appearance="minimal"
+                      onClick={() => {
+                        handleDialog({
+                          title: "코스 삭제",
+                          confirmLabel: "삭제",
+                          content: (
+                            <div>
+                              <p>{data.courseName}과목을 삭제하시겠습니까?</p>
+                              <Button onClick={() => setIsShownFalse()}>
+                                아니오
+                              </Button>
+                              <Button
+                                intent="danger"
+                                onClick={() => {
+                                  User.courseDelete(data.id)
+                                    .then((res) => {
+                                      console.log("코스삭제 오류 확인", res);
                                       if (res.data.success === true) {
                                         toaster.success(
                                           "코스 삭제 완료되었습니다.",
@@ -263,74 +271,94 @@ function Table({
                                         );
                                       }
                                       setIsShownFalse();
-                                    });
-                                  }}
-                                >
-                                  예, 삭제하겠습니다.
-                                </Button>
-                              </div>
-                            ),
-                          });
-                          setIsShown(true);
-                        }}
-                      >
-                        삭제
-                      </Button>
-                    </>
-                  ) : undefined}
-                  {isMylist ? (
-                    <>
-                      <Button
-                        appearance="minimal"
-                        onClick={() => {
-                          handleDialog({
-                            title: "수강 신청 취소",
-                            confirmLabel: "취소",
-                            content: (
-                              <div>
-                                <p>
-                                  {data.courseName}과목의 수강을
-                                  취소하시겠습니까?
-                                </p>
-                                <Button onClick={() => setIsShownFalse()}>
-                                  아니오
-                                </Button>
-                                <Button
-                                  onClick={() => {
-                                    User.cancleRegCourse(data.id).then(
-                                      (res) => {
-                                        if (res.data.success === true) {
-                                          window.location.reload(false);
-                                          toaster.success(
-                                            "수강 취소 완료되었습니다.",
-                                            { duration: 3 }
-                                          );
-                                        } else {
-                                          toaster.warning(
-                                            "에러가 발생해 수강 취소를 하지 못했습니다.",
-                                            {
-                                              duration: 3,
-                                            }
-                                          );
+                                    })
+                                    .catch((error) => console.log(error));
+                                  window.location.reload(false);
+                                }}
+                              >
+                                예, 삭제하겠습니다.
+                              </Button>
+                            </div>
+                          ),
+                        });
+                        setIsShown(true);
+                      }}
+                    >
+                      삭제
+                    </Button>
+                    <Button
+                      appearance="minimal"
+                      disabled={data.appliedCount > 0 ? false : true}
+                      onClick={() => {
+                        handleDialog({
+                          title: "수강생 목록 확인",
+                          confirmLabel: "나가기",
+                          content: (
+                            <DialogContents.StudentList
+                              data={data}
+                              year={year}
+                              semester={semester}
+                              onSubmit={setIsShownFalse}
+                            />
+                          ),
+                        });
+                        setIsShown(true);
+                      }}
+                    >
+                      수강생 목록
+                    </Button>
+                  </TableUI.TextCell>
+                ) : undefined}
+                {isMylist ? (
+                  <TableUI.TextCell flexBasis={220} flexShrink={0} flexGrow={0}>
+                    <Button
+                      appearance="minimal"
+                      onClick={() => {
+                        handleDialog({
+                          title: "수강 신청 취소",
+                          confirmLabel: "취소",
+                          content: (
+                            <div>
+                              <p>
+                                {data.courseName}과목의 수강을 취소하시겠습니까?
+                              </p>
+                              <Button onClick={() => setIsShownFalse()}>
+                                아니오
+                              </Button>
+                              <Button
+                                onClick={() => {
+                                  User.cancleRegCourse(data.id).then((res) => {
+                                    if (res.data.success === true) {
+                                      console.log(res.data);
+                                      toaster.success(
+                                        "수강 취소 완료되었습니다.",
+                                        { duration: 3 }
+                                      );
+                                      window.location.reload(false);
+                                    } else {
+                                      toaster.warning(
+                                        "에러가 발생해 수강 취소를 하지 못했습니다.",
+                                        {
+                                          duration: 3,
                                         }
-                                        setIsShownFalse();
-                                      }
-                                    );
-                                  }}
-                                >
-                                  예, 수강 취소하겠습니다.
-                                </Button>
-                              </div>
-                            ),
-                          });
-                          setIsShown(true);
-                        }}
-                      >
-                        신청취소
-                      </Button>
-                    </>
-                  ) : undefined}
-                </TableUI.TextCell>
+                                      );
+                                    }
+                                    setIsShownFalse();
+                                  });
+                                }}
+                              >
+                                예, 수강 취소하겠습니다.
+                              </Button>
+                            </div>
+                          ),
+                        });
+                        setIsShown(true);
+                      }}
+                    >
+                      신청취소
+                    </Button>
+                  </TableUI.TextCell>
+                ) : undefined}
               </TableUI.Row>
             ))
           )}

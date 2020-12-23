@@ -3,7 +3,7 @@ import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import AuthService from "../services/auth.service";
-
+import {toaster} from "evergreen-ui"
 import { isEmail } from "validator";
 
 function useForm({ initialValues, onSubmit, validate }) {
@@ -11,12 +11,12 @@ function useForm({ initialValues, onSubmit, validate }) {
   const [submitting, setSubmitting] = useState(false);
 
   const handleChange = (e) => {
-    console.log(e.target.name, e.target.value);
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
+    console.log("스테이트확인", name, value);
   };
 
-  const doubleCheckPassword = () => {
+  const validPassword = (value) => {
     if (values.password != values.checkPassword) {
       return (
         <div className="alert alert-danger" role="alert">
@@ -47,7 +47,7 @@ function useForm({ initialValues, onSubmit, validate }) {
     submitting,
     handleChange,
     handleSubmit,
-    doubleCheckPassword,
+    validPassword,
   };
 }
 
@@ -55,7 +55,7 @@ const required = (value) => {
   if (!value) {
     return (
       <div className="alert alert-danger" role="alert">
-        This field is required!
+        필수 입력 항목입니다.
       </div>
     );
   }
@@ -65,7 +65,7 @@ const validEmail = (value) => {
   if (!isEmail(value)) {
     return (
       <div className="alert alert-danger" role="alert">
-        This is not a valid email.
+        유효한 이메일 형식이 아닙니다.
       </div>
     );
   }
@@ -75,7 +75,7 @@ const vusername = (value) => {
   if (value.length < 3 || value.length > 20) {
     return (
       <div className="alert alert-danger" role="alert">
-        The username must be between 3 and 20 characters.
+        학번(id)는 3~20글자 사이여야 합니다.
       </div>
     );
   }
@@ -86,7 +86,7 @@ const Register = (props) => {
   const checkBtn = useRef();
   const [message, setMessage] = useState("");
   const [successful, setSuccessful] = useState(false);
-  const { values, handleChange, handleSubmit, doubleCheckPassword } = useForm({
+  const { values, handleChange, handleSubmit, validPassword } = useForm({
     initialValues: {
       _id: "",
       password: "",
@@ -110,9 +110,10 @@ const Register = (props) => {
     if (checkBtn.current.context._errors.length === 0) {
       result.then(
         (response) => {
-          setMessage(response.data.message);
+          console.log(response);
+          setMessage("회원가입성공");
           setSuccessful(true);
-          props.history.push("/login");
+         props.history.push("/login");
         },
         (error) => {
           console.log("회원가입 에러 : ", error);
@@ -140,10 +141,10 @@ const Register = (props) => {
         />
 
         <Form onSubmit={handleRegister} ref={form}>
-          {!successful && (
+          
             <div>
               <div className="form-group">
-                <label htmlFor="_id">아이디</label>
+                <label htmlFor="_id">ID/학번</label>
                 <Input
                   type="text"
                   className="form-control"
@@ -174,7 +175,7 @@ const Register = (props) => {
                   name="checkPassword"
                   value={values.checkPassword}
                   onChange={handleChange}
-                  validations={[required, doubleCheckPassword]}
+                  validations={[required, validPassword]}
                 />
               </div>
               <div className="form-group">
@@ -240,7 +241,7 @@ const Register = (props) => {
                 <button className="btn btn-primary btn-block">회원가입</button>
               </div>
             </div>
-          )}
+          
 
           {message && (
             <div className="form-group">

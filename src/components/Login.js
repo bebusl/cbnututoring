@@ -1,4 +1,5 @@
 import React, { useState, useRef, useContext } from "react";
+import {Link} from "react-router-dom";
 import { IsLogin, UserData } from "../App";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
@@ -120,6 +121,7 @@ const Login = (props) => {
             </button>
           </div>
 
+
           {message && (
             <div className="form-group">
               <div className="alert alert-danger" role="alert">
@@ -129,6 +131,7 @@ const Login = (props) => {
           )}
           <CheckButton style={{ display: "none" }} ref={checkBtn} />
         </Form>
+        <p>비밀번호를 잊으셨나요? <Link to="/forgotpassword">여기</Link>를 클릭하세요</p>
       </div>
     </div>
   );

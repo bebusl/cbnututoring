@@ -3,7 +3,7 @@ import axios from "axios";
 const register = (values) => {
   console.log("젭알", values);
   return axios
-    .post("/api/accounts/" + "register", values)
+    .post("/api/accounts/register", values)
     .then((res) => console.log("회원가입test", res));
 };
 

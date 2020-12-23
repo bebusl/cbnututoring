@@ -6,6 +6,7 @@ const MyList = ({ years }) => {
   const [datas, setDatas] = useState();
   const [myList, setMyList] = useState();
   useEffect(() => {
+    console.log("MYLISTPAGE");
     axios
       .get(`/api/registration/`)
       .then(function (response) {

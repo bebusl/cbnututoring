@@ -16,6 +16,7 @@ import CourseManage from "./components/CourseManage";
 import EnrolmentSeason from "./components/EnrolmentSeason";
 import User from "./components/User";
 import Report from "./components/Report";
+import ForgotPassword from "./components/ForgotPassword"
 
 export const IsLogin = createContext();
 export const UserData = createContext();
@@ -33,7 +34,7 @@ const studentNav = [
   {
     title: "내 수강 목록",
     to: "/mylist",
-    component: (props) => <MyList years={years} {...props} />,
+    component: <MyList years={years}  />,
   },
 ];
 const adminNav = [
@@ -170,6 +171,7 @@ const App = (props) => {
               <Route exact path="/register" component={Register} />
               <Route exact path="/select" component={ProgramSelect} />
               <Route exact path="/user" component={User}></Route>
+              <Route exact path="/forgotpassword" component={ForgotPassword} />
 
               {loginStatus &&
                 studentNav.map((url, idx) => {

@@ -166,3 +166,33 @@ body{
 .ub-fnt-sze_12px{
   font-size: 12px;
 }
+
+.forgetQuestion{
+  font-size:0.8rem;
+  text-align: center;
+}
+
+
+.forgotPasswordwrap{
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.forgotPassword-form{
+  background-color: rgba(255,255,255,0.5);
+  border-radius: 15px;
+  border : 1px solid white;
+  margin-top:5vh;
+  padding : 5vh 5vw;
+}
+
+.hidden{
+  display:none
+}
+
+.more{
+  padding:5%;
+  font-size:0.9rem;
+}

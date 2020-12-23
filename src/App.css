@@ -114,9 +114,17 @@ button{
   background-color: rgba(52,58,64,0.1);
   color:#343a40;
   border : 1px solid #343a40;
-  border-radius: 10px;
   margin-right: 0.3em;
+  border-radius: 4px;
+  box-shadow: rgba(52, 58, 64,0.3) 2px 2px 2px;
 }
+
+#root > div> div.selectMenu > button:hover,#root > div> div.selectMenu > button:hover>a{
+  background-color: rgba(52,58,64,1);
+  color:white;
+  text-decoration: none;
+}
+
 #root > div > div.selectMenu > button > a{
   color:#343a40;
 }

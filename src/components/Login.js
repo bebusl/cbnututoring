@@ -131,7 +131,7 @@ const Login = (props) => {
           )}
           <CheckButton style={{ display: "none" }} ref={checkBtn} />
         </Form>
-        <p>비밀번호를 잊으셨나요? <Link to="/forgotpassword">여기</Link>를 클릭하세요</p>
+        <p className="forgetQuestion">비밀번호를 잊으셨나요? <Link to="/forgotpassword">여기</Link>를 클릭하세요</p>
       </div>
     </div>
   );

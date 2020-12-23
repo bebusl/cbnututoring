@@ -146,6 +146,7 @@ function Report({ years }) {
       <form
         onSubmit={(e) => {
           e.preventDefault();
+          console.log("보내는데이터",selectWeek,year,semester);
           Axios({
             url: `/api/reports/download/week`,
             method: "POST",
@@ -155,28 +156,27 @@ function Report({ years }) {
               year: year,
               semester: semester,
             },
-          })
-            .then((res) => {
+          }).then((res) => {
               console.log("집파일 맞나유~", res);
               fileDownload(
                 res.data,
                 `${decodeURIComponent(res.headers["file-name"])}`
               );
             })
-            .catch((err) => console.log(err));
+            .catch((err) => console.log("왜안뒈..",err));
+            console.log("확인화깅ㄴ");
         }}
       >
         <Select
           value={selectWeek}
-          onChange={(event) => setWeek(event.target.value)}
+          onChange={(event) => {console.log("선택 주:",selectWeek);setWeek(event.target.value)}}
         >
-          {week.map((data) => (
-            <option value={data}>{data}</option>
+          {week.map((data,idx) => (
+            <option value={data} key={idx}>{data}</option>
           ))}
         </Select>
         주차
         <Button
-          onClick={(e) => e.preventDefault()}
           type="submit"
           marginY={8}
           marginRight={12}

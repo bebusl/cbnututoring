@@ -16,7 +16,7 @@ import CourseManage from "./components/CourseManage";
 import EnrolmentSeason from "./components/EnrolmentSeason";
 import User from "./components/User";
 import Report from "./components/Report";
-import ForgotPassword from "./components/ForgotPassword"
+import ForgotPassword from "./components/ForgotPassword";
 
 export const IsLogin = createContext();
 export const UserData = createContext();
@@ -30,11 +30,15 @@ for (var y = start_year; y <= 2026; y++) {
   years.push(y);
 }
 const studentNav = [
-  { title: "강좌 조회", to: "/alllist", component: <AllList years={years} /> },
+  {
+    title: "강좌 조회",
+    to: "/alllist",
+    component: (props) => <AllList years={years} {...props} />,
+  },
   {
     title: "내 수강 목록",
     to: "/mylist",
-    component: <MyList years={years}  />,
+    component: (props) => <MyList years={years} {...props} />,
   },
 ];
 const adminNav = [
@@ -74,36 +78,26 @@ const App = (props) => {
 
   useEffect(() => {
     axios
+      .get("/api/accounts/auth")
+      .then((res) => {
+        const data = res.data;
+        if (!loginStatus) {
+          setLoginStatus(data.success);
+          handleChangeUserData(data.account);
+        }
+      })
+      .catch((err) => console.log("로그인 에러", err));
+  });
+
+  useEffect(() => {
+    axios
       .get("/api/systems")
       .then((res) => console.log(res))
       .catch((error) => console.log(error));
   }, []);
 
-  useEffect((props) => {
-    /*async function fetchData(props, option) {
-      await AuthCheck(props, option).then((res) => {
-        if (loginStatus !== res.auth) {
-          setLoginStatus(res.auth);
-          setUserData(res.datas);
-        }
-      });
-    }
-    fetchData(props, false);
-    console.log(loginStatus, userData);*/
-    //console.log(AuthCheck(props, false));
-    axios.get("/api/accounts/auth").then((res) => {
-      const data = res.data;
-      if (data.success !== loginStatus) {
-        //현재 로그인 상태와 변수에 저장된 값이 같지 않을 때. 아니면 무한 호출됨.
-        setLoginStatus(data.success);
-        handleChangeUserData(data.account);
-      }
-    });
-  });
-
   const logOut = async () => {
-    await AuthService.logout();
-    setLoginStatus(false);
+    await AuthService.logout().then(setLoginStatus(false));
   };
 
   return (
@@ -141,13 +135,13 @@ const App = (props) => {
               <div className="navbar-nav ml-auto">
                 <li className="nav-item">
                   <Link to={"/login"} className="nav-link">
-                    Login
+                    로그인
                   </Link>
                 </li>
 
                 <li className="nav-item">
                   <Link to={"/register"} className="nav-link">
-                    Sign Up
+                    회원가입
                   </Link>
                 </li>
               </div>
@@ -169,8 +163,7 @@ const App = (props) => {
                 {loginStatus ? <Redirect to="/user" /> : undefined}
               </Route>
               <Route exact path="/register" component={Register} />
-              <Route exact path="/select" component={ProgramSelect} />
-              <Route exact path="/user" component={User}></Route>
+              <Route exact path="/user" component={User} />
               <Route exact path="/forgotpassword" component={ForgotPassword} />
 
               {loginStatus &&
@@ -184,7 +177,7 @@ const App = (props) => {
 
                       <div className="main-column">
                         <h3>{url.title}</h3>
-                        {url.component}
+                        {url.component(props)}
                       </div>
                     </Route>
                   );

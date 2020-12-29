@@ -28,10 +28,14 @@ const ForgotPassword = (props) => {
           setvalidEmail(res.data.email);
           setcheckstuNum(true);
         } else {
-          toaster.warning("에러가 발생했습니다.");
+          toaster.warning("이메일 전송이 실패했습니다. 다시 시도해주세요");
         }
       })
-      .catch((err) => toaster.warning("오류 발생" + err));
+      .catch((err) =>
+        toaster.warning(
+          "토큰 생성 실패 : 인터넷 상태를 확인해주세요. 혹은 관리자 연락 바랍니다."
+        )
+      );
     //여기에 학번 제출하면 해야 할 일 적기(api 호출해서 then. success시 checkstuNum true로 바꾸기)
   };
 
@@ -48,7 +52,11 @@ const ForgotPassword = (props) => {
           toaster.warning("잘못된 인증번호입니다.");
         }
       })
-      .catch((err) => toaster.warning("에러" + err));
+      .catch((err) =>
+        toaster.warning(
+          "실패 : 인터넷 연결 상태를 확인하거나 관리자에게 문의바랍니다."
+        )
+      );
     //여기에 학번 제출하면 해야 할 일 적기(api 호출해서 then. success시 checkstuNum true로 바꾸기)
   };
 
@@ -65,7 +73,11 @@ const ForgotPassword = (props) => {
           props.history.push("/login");
         }
       })
-      .catch((err) => toaster.warning("비밀번호 재설정 실패. 오류코드" + err));
+      .catch((err) =>
+        toaster.warning(
+          "비밀번호 재설정 실패 : 인터넷 연결 상태를 확인하거나 관리자에게 문의바랍니다."
+        )
+      );
     //여기에 학번 제출하면 해야 할 일 적기(api 호출해서 then. success시 checkstuNum true로 바꾸기)
   };
 

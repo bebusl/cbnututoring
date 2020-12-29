@@ -196,3 +196,24 @@ body{
   padding:5%;
   font-size:0.9rem;
 }
+
+
+.scroll-page{
+  min-width: 1000px;
+  overflow: scroll;
+}
+
+#student-list-to-xls{
+  
+  text-align: center;
+  margin-bottom:1rem;
+  border-top : 1px solid rgba(0,0,0,0.3);
+  border-bottom : 1px solid rgba(0,0,0,0.3);
+}
+#student-list-to-xls thead{
+  background-color: rgba(0,0,0,0.1);
+}
+
+#student-list-xls-button{
+  float:right;
+}

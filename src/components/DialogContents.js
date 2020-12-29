@@ -4,6 +4,7 @@ import { TextInputField, Button, toaster, Select } from "evergreen-ui";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import User from "../services/user.service";
 import Axios from "axios";
+import styled from "styled-components";
 
 const department = ["컴퓨터공학과", "소프트웨어학과", "정보통신학과", "로봇"];
 const week = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
@@ -313,8 +314,42 @@ const StudentList = ({ onSubmit, data, year, semester }) => {
       })
       .catch((err) => console.log("에러" + err));
   }, []);
+
   return (
     <>
+      <div className="scroll-page">
+        <table id="student-list-to-xls">
+          <thead>
+            <tr>
+              <th>소속</th>
+              <th>학년</th>
+              <th>교과목명</th>
+              <th>담당교수</th>
+              <th>튜터명</th>
+              <th>학번</th>
+              <th>학과</th>
+              <th>이름</th>
+              <th>이메일</th>
+            </tr>
+          </thead>
+          <tbody>
+            {infos &&
+              infos.map((info) => (
+                <tr key={info.id}>
+                  <td>{department[data.department]}</td>
+                  <td>{data.grade}</td>
+                  <td>{data.courseName}</td>
+                  <td>{data.professorName}</td>
+                  <td>{data.tutorName}</td>
+                  <td>{info._id}</td>
+                  <td>{department[info.department]}</td>
+                  <td>{info.name}</td>
+                  <td>{info.email}</td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
       <ReactHTMLTableToExcel
         id="student-list-xls-button"
         className="download-table-xls-button"
@@ -323,27 +358,6 @@ const StudentList = ({ onSubmit, data, year, semester }) => {
         sheet="sheet1"
         buttonText="수강생 목록 다운로드"
       />
-      <table id="student-list-to-xls">
-        <thead>
-          <tr>
-            <th>학번</th>
-            <th>학과</th>
-            <th>이름</th>
-            <th>이메일</th>
-          </tr>
-        </thead>
-        <tbody>
-          {infos &&
-            infos.map((info) => (
-              <tr key={info.id}>
-                <td>{info._id}</td>
-                <td>{department[info.department]}</td>
-                <td>{info.name}</td>
-                <td>{info.email}</td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
     </>
   );
 };

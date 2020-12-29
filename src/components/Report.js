@@ -3,16 +3,14 @@ import axios from "axios";
 import { Table, Button, Select } from "evergreen-ui";
 import Axios from "axios";
 const fileDownload = require("js-file-download");
-const fileSaver = require("file-saver");
 
 function Report({ years }) {
   const [year, setYear] = useState(2020);
   const [semester, setSemester] = useState(1);
   const [datas, setDatas] = useState();
   const [selectWeek, setWeek] = useState(1);
-  const week = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+  const week = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
   const X = "X";
-  const check = [X, X, X, X, X, X, X, X, X, X, X, X, X, X, X];
 
   const yearChange = (e) => {
     if (e.target.name === "year") {
@@ -65,16 +63,7 @@ function Report({ years }) {
           setDatas(res.data.courseData);
         }
       });
-    /* axios
-      .get(`/api/courses/find/${year}/${semester}`)
-      .then(function (response) {
-        console.log("검색결과", response);
-        setDatas(response.data.courseData);
-        console.log(datas);
-      })
-      .catch((error) => {
-        console.log("erer : ", error.response);
-      }); 이거 보고서 목록 */
+
     window.localStorage.setItem("year", year);
     window.localStorage.setItem("semester", semester);
   };
@@ -112,6 +101,7 @@ function Report({ years }) {
           {week.map((data) => (
             <Table.TextHeaderCell key={data}>{data}주차</Table.TextHeaderCell>
           ))}
+          <Table.TextHeaderCell>다운로드</Table.TextHeaderCell>
         </Table.Head>
         <Table.Body>
           {datas &&
@@ -139,6 +129,32 @@ function Report({ years }) {
                     )}
                   </Table.TextCell>
                 ))}
+                <Table.TextCell>
+                  <Button
+                    onClick={() => {
+                      Axios({
+                        url: `/api/reports/downloads`,
+                        method: "POST",
+                        responseType: "blob",
+                        data: {
+                          year: year,
+                          semester: semester,
+                          _id: data.tutorNumber,
+                        },
+                      })
+                        .then((res) => {
+                          console.log("집파일 맞나유~", res);
+                          fileDownload(
+                            res.data,
+                            `${decodeURIComponent(res.headers["file-name"])}`
+                          );
+                        })
+                        .catch((err) => console.log("왜안뒈..", err));
+                    }}
+                  >
+                    다운로드
+                  </Button>
+                </Table.TextCell>
               </Table.Row>
             ))}
         </Table.Body>
@@ -146,7 +162,7 @@ function Report({ years }) {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          console.log("보내는데이터",selectWeek,year,semester);
+          console.log("보내는데이터", selectWeek, year, semester);
           Axios({
             url: `/api/reports/download/week`,
             method: "POST",
@@ -156,32 +172,31 @@ function Report({ years }) {
               year: year,
               semester: semester,
             },
-          }).then((res) => {
-              console.log("집파일 맞나유~", res);
+          })
+            .then((res) => {
               fileDownload(
                 res.data,
                 `${decodeURIComponent(res.headers["file-name"])}`
               );
             })
-            .catch((err) => console.log("왜안뒈..",err));
-            console.log("확인화깅ㄴ");
+            .catch((err) => null);
         }}
       >
         <Select
           value={selectWeek}
-          onChange={(event) => {console.log("선택 주:",selectWeek);setWeek(event.target.value)}}
+          onChange={(event) => {
+            setWeek(event.target.value);
+          }}
         >
-          {week.map((data,idx) => (
-            <option value={data} key={idx}>{data}</option>
+          {week.map((data, idx) => (
+            <option value={data} key={idx}>
+              {data}
+            </option>
           ))}
         </Select>
-        주차
-        <Button
-          type="submit"
-          marginY={8}
-          marginRight={12}
-        >
-          보고서 다운
+        <span>주차</span>
+        <Button type="submit" marginY={8} marginLeft="1rem">
+          보고서 다운로드
         </Button>
       </form>
     </div>

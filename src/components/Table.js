@@ -35,22 +35,20 @@ function Table({
   });
 
   useEffect(() => {
-    //push는
-
     Axios.get(`/api/systems/find/1/${year}/${semester}`)
       .then((res) => {
-        console.log("응답보슈", res);
         if (
           res.data.result.start > Date.now() ||
           Date.now() > res.data.result.end
         ) {
           setAccessSeason(false);
-          console.log("지금 수강신청기간이 아니예유");
         }
         console.log(res.data.result.start, res.data.result.end, Date.now());
-        console.log("수강신청기간 아님", accessSeason);
       })
       .catch((error) => console.log(error));
+  }, [year, semester]);
+  useEffect(() => {
+    //push
 
     Axios.get(`/api/registration/`)
       .then(function (response) {

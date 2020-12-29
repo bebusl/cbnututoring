@@ -14,9 +14,8 @@ const login = (_id, password) => {
   });
 };
 
-const logout = async () => {
-  console.log("로그아웃 중");
-  return await axios.get("/api/accounts/logout");
+const logout = () => {
+  return axios.get("/api/accounts/logout");
 };
 
 export default {

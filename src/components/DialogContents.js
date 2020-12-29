@@ -52,6 +52,9 @@ const Enrolment = ({ onSubmit, data }) => {
         <TextInputField label="이름" defaultValue={userData.name} />
         <TextInputField label="이메일" defaultValue={userData.email} />
         <TextInputField label="연락처" defaultValue={userData.phoneNumber} />
+        <Button onClick={() => onSubmit()} intent="danger">
+          취소
+        </Button>
         <Button type="submit">제출</Button>
       </form>
     </div>
@@ -223,10 +226,19 @@ const CourseModify = ({ onSubmit, data }) => {
               onChange={handleFileChange}
             />
           </li>
-          <li>
-            <button type="submit">수정</button>
-          </li>
         </ul>
+        <Button
+          onClick={(e) => {
+            e.preventDefault();
+            onSubmit();
+          }}
+          marginRight="0.5rem"
+        >
+          취소
+        </Button>
+        <Button intent="success" type="submit">
+          수정
+        </Button>
       </form>
     </div>
   );
@@ -293,7 +305,18 @@ const ReportReg = ({ onSubmit, data }) => {
           accept=".pdf,.hwp"
           onChange={handleFileChange}
         />
-        <button type="submit">제출</button>
+        <div>
+          <Button
+            intent="danger"
+            onClick={(e) => {
+              e.preventDefault();
+              onSubmit();
+            }}
+          >
+            취소
+          </Button>
+          <Button type="submit">제출</Button>
+        </div>
       </form>
     </div>
   );
@@ -321,11 +344,11 @@ const StudentList = ({ onSubmit, data, year, semester }) => {
         <table id="student-list-to-xls">
           <thead>
             <tr>
-              <th>소속</th>
-              <th>학년</th>
-              <th>교과목명</th>
-              <th>담당교수</th>
-              <th>튜터명</th>
+              <th className="hidden">소속</th>
+              <th className="hidden">학년</th>
+              <th className="hidden">교과목명</th>
+              <th className="hidden">담당교수</th>
+              <th className="hidden">튜터명</th>
               <th>학번</th>
               <th>학과</th>
               <th>이름</th>
@@ -336,11 +359,11 @@ const StudentList = ({ onSubmit, data, year, semester }) => {
             {infos &&
               infos.map((info) => (
                 <tr key={info.id}>
-                  <td>{department[data.department]}</td>
-                  <td>{data.grade}</td>
-                  <td>{data.courseName}</td>
-                  <td>{data.professorName}</td>
-                  <td>{data.tutorName}</td>
+                  <td className="hidden">{department[data.department]}</td>
+                  <td className="hidden">{data.grade}</td>
+                  <td className="hidden">{data.courseName}</td>
+                  <td className="hidden">{data.professorName}</td>
+                  <td className="hidden">{data.tutorName}</td>
                   <td>{info._id}</td>
                   <td>{department[info.department]}</td>
                   <td>{info.name}</td>
@@ -358,6 +381,7 @@ const StudentList = ({ onSubmit, data, year, semester }) => {
         sheet="sheet1"
         buttonText="수강생 목록 다운로드"
       />
+      <Button onClick={onSubmit}>취소</Button>
     </>
   );
 };

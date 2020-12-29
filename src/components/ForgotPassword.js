@@ -1,6 +1,6 @@
 import Axios from "axios";
 import React, { useState } from "react";
-import { toaster } from "evergreen-ui";
+import { toaster, Button } from "evergreen-ui";
 
 const ForgotPassword = (props) => {
   const [validEmail, setvalidEmail] = useState("");
@@ -141,6 +141,15 @@ const ForgotPassword = (props) => {
         </form>
         {}
       </div>
+      <Button
+        onClick={(e) => {
+          e.preventDefault();
+          props.history.goBack();
+        }}
+        marginTop="1rem"
+      >
+        취소
+      </Button>
     </div>
   );
 };

@@ -14,7 +14,7 @@ ul li{
 }
 
 button, input, optgroup, select, textarea{
-  margin : 3px 0px ;
+  margin : 5px 0.3rem ;
   padding : 0 5px;
 }
 
@@ -199,12 +199,11 @@ body{
 
 
 .scroll-page{
-  min-width: 1000px;
   overflow: scroll;
 }
 
 #student-list-to-xls{
-  
+  min-width: 100%;
   text-align: center;
   margin-bottom:1rem;
   border-top : 1px solid rgba(0,0,0,0.3);
@@ -217,3 +216,4 @@ body{
 #student-list-xls-button{
   float:right;
 }
+

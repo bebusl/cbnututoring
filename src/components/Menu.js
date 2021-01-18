@@ -8,7 +8,11 @@ function Menu(props) {
   const { loginStatus } = useContext(IsLogin);
 
   const studentNav = [
-    { title: "강좌 조회", to: "/alllist", component: <div>강좌 조회</div> },
+    {
+      title: "수강신청(강좌조회)",
+      to: "/alllist",
+      component: <div>수강신청(강좌조회)</div>,
+    },
     {
       title: "내 수강 목록",
       to: "/mylist",

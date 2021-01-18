@@ -217,3 +217,10 @@ body{
   float:right;
 }
 
+textarea{
+  width:80%;
+}
+
+.red{
+  color:red;
+}

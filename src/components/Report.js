@@ -164,7 +164,7 @@ function Report({ years }) {
           e.preventDefault();
           console.log("보내는데이터", selectWeek, year, semester);
           Axios({
-            url: `/api/reports/download/week`,
+            url: `/api/reports/downloads`,
             method: "POST",
             responseType: "blob",
             data: {

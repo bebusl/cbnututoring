@@ -4,6 +4,8 @@ import { UserData } from "../App";
 import {
   Table as TableUI,
   Button,
+  IconButton,
+  PlusIcon,
   Dialog,
   Pane,
   toaster,
@@ -32,6 +34,7 @@ function Table({
     title: "",
     confirmLabel: "",
     content: "",
+    hasFooter: false,
   });
 
   useEffect(() => {
@@ -82,12 +85,12 @@ function Table({
           setIsShown(false);
         }}
         confirmLabel={dialog.confirmLabel}
-        hasFooter={false}
+        hasFooter={dialog.hasFooter}
       >
         {dialog.content}
       </Dialog>
       <div className="scroll-page">
-        <TableUI>
+        <TableUI textAlign="center">
           <TableUI.Head>
             <TableUI.TextHeaderCell>소속</TableUI.TextHeaderCell>
             <TableUI.TextHeaderCell flexBasis={50} flexShrink={0} flexGrow={0}>
@@ -96,8 +99,8 @@ function Table({
             <TableUI.TextHeaderCell>교과목명</TableUI.TextHeaderCell>
             <TableUI.TextHeaderCell>담당교수</TableUI.TextHeaderCell>
             <TableUI.TextHeaderCell>튜터명</TableUI.TextHeaderCell>
-            <TableUI.TextHeaderCell flexBasis={50} flexShrink={0} flexGrow={0}>
-              최대인원
+            <TableUI.TextHeaderCell flexBasis={90} flexShrink={0} flexGrow={0}>
+              튜터프로필
             </TableUI.TextHeaderCell>
             {isAllList ? (
               <TableUI.TextHeaderCell
@@ -108,8 +111,8 @@ function Table({
                 신청인원
               </TableUI.TextHeaderCell>
             ) : undefined}
-            <TableUI.TextHeaderCell flexBasis={220} flexShrink={0} flexGrow={0}>
-              버튼
+            <TableUI.TextHeaderCell flexBasis={250} flexShrink={0} flexGrow={0}>
+              {" "}
             </TableUI.TextHeaderCell>
           </TableUI.Head>
           <TableUI.Body height={240}>
@@ -127,8 +130,24 @@ function Table({
                   <TableUI.TextCell>{data.courseName}</TableUI.TextCell>
                   <TableUI.TextCell>{data.professorName}</TableUI.TextCell>
                   <TableUI.TextCell>{data.tutorName}</TableUI.TextCell>
-                  <TableUI.TextCell flexBasis={50} flexShrink={0} flexGrow={0}>
-                    {data.limit}
+                  <TableUI.TextCell flexBasis={90} flexShrink={0} flexGrow={0}>
+                    <IconButton
+                      height={32}
+                      icon={PlusIcon}
+                      onClick={() => {
+                        handleDialog({
+                          title: "튜터 프로필",
+                          confirmLabel: "확인",
+                          hasFooter: true,
+                          content: (
+                            <div>
+                              <p>{data.profile}</p>
+                            </div>
+                          ),
+                        });
+                        setIsShown(true);
+                      }}
+                    />
                   </TableUI.TextCell>
                   {isAllList ? (
                     <TableUI.TextCell
@@ -141,7 +160,7 @@ function Table({
                   ) : undefined}
                   {isAllList ? (
                     <TableUI.TextCell
-                      flexBasis={220}
+                      flexBasis={250}
                       flexShrink={0}
                       flexGrow={0}
                     >
@@ -166,69 +185,48 @@ function Table({
                       >
                         운영 계획서
                       </Button>
-                      {data.tutorNumber === userData._id ? (
-                        <Button
-                          appearance="minimal"
-                          onClick={() => {
+                      <Button
+                        appearance="minimal"
+                        disabled={
+                          !accessSeason ||
+                          data.tutorNumber === userData._id ||
+                          (mylistData &&
+                            mylistData.some((e) => e.id === data.id))
+                            ? true
+                            : false
+                        }
+                        onClick={() => {
+                          if (data.appliedCount < data.limit) {
                             handleDialog({
-                              title: "보고서 등록",
-                              confirmLabel: "등록",
+                              title: "수강신청",
+                              confirmLabel: "신청",
                               content: (
-                                <DialogContents.ReportReg
-                                  data={data.id}
+                                <DialogContents.Enrolment
+                                  data={data}
                                   onSubmit={setIsShownFalse}
+                                  readOnly
                                 />
                               ),
                             });
-
                             setIsShown(true);
-                          }}
-                        >
-                          보고서등록
-                        </Button>
-                      ) : (
-                        <Button
-                          appearance="minimal"
-                          disabled={
-                            !accessSeason ||
-                            (mylistData &&
-                              mylistData.some((e) => e.id === data.id))
-                              ? true
-                              : false
+                          } else {
+                            console.log(
+                              "왜 안되는 거쥬",
+                              data.appliedCount,
+                              data.limit
+                            );
+                            toaster.warning(
+                              "인원이 초과되어 신청할 수 없습니다.",
+                              {
+                                duration: 3,
+                              }
+                            );
                           }
-                          onClick={() => {
-                            if (data.appliedCount < data.limit) {
-                              handleDialog({
-                                title: "수강신청",
-                                confirmLabel: "신청",
-                                content: (
-                                  <DialogContents.Enrolment
-                                    data={data}
-                                    onSubmit={setIsShownFalse}
-                                    readOnly
-                                  />
-                                ),
-                              });
-                              setIsShown(true);
-                            } else {
-                              console.log(
-                                "왜 안되는 거쥬",
-                                data.appliedCount,
-                                data.limit
-                              );
-                              toaster.warning(
-                                "인원이 초과되어 신청할 수 없습니다.",
-                                {
-                                  duration: 3,
-                                }
-                              );
-                            }
-                            //User.regCourse(data.id);
-                          }}
-                        >
-                          수강신청
-                        </Button>
-                      )}
+                          //User.regCourse(data.id);
+                        }}
+                      >
+                        수강신청
+                      </Button>
                     </TableUI.TextCell>
                   ) : undefined}
                   {isCourseManage ? (
@@ -328,7 +326,7 @@ function Table({
                   ) : undefined}
                   {isMylist ? (
                     <TableUI.TextCell
-                      flexBasis={220}
+                      flexBasis={250}
                       flexShrink={0}
                       flexGrow={0}
                     >
@@ -380,6 +378,27 @@ function Table({
                         }}
                       >
                         신청취소
+                      </Button>
+                      <Button
+                        appearance="minimal"
+                        disabled={data.tutorNumber !== userData._id}
+                        onClick={() => {
+                          handleDialog({
+                            title: "보고서 등록",
+                            confirmLabel: "등록",
+
+                            content: (
+                              <DialogContents.ReportReg
+                                data={data.id}
+                                onSubmit={setIsShownFalse}
+                              />
+                            ),
+                          });
+
+                          setIsShown(true);
+                        }}
+                      >
+                        보고서등록
                       </Button>
                     </TableUI.TextCell>
                   ) : undefined}

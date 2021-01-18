@@ -41,7 +41,7 @@ function useForm({ initialValues, history }) {
           toaster.success("강좌 등록을 성공했습니다.");
           history.push("/tutor/admin/coursemanage");
         } else {
-          toaster.danger("강좌 등록을 실패했습니다.");
+          toaster.danger("강좌 등록을 실패했습니다." + response.data);
         }
       })
       .catch((error) => toaster.danger("에러가 발생했습니다." + error));
@@ -154,6 +154,15 @@ export default function CourseReg({ years, history }) {
           <li>
             <label htmlFor="limit">최대인원</label>
             <input type="text" name="limit" onChange={handleChange}></input>
+          </li>
+          <li>
+            <label htmlFor="profile">튜터프로필</label>
+            <textarea
+              id="profile"
+              name="profile"
+              rows="5"
+              onChange={handleChange}
+            ></textarea>
           </li>
           <li>
             <label htmlFor="file">운영계획서</label>

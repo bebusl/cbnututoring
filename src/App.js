@@ -32,7 +32,7 @@ for (var y = start_year; y <= 2026; y++) {
 }
 const studentNav = [
   {
-    title: "강좌 조회",
+    title: "수강신청(강좌조회)",
     to: "/alllist",
     component: (props) => <AllList years={years} {...props} />,
   },

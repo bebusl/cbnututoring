@@ -75,7 +75,11 @@ const Login = (props) => {
   };
 
   return (
-    <div className="col-md-12">
+    <div className="col-md-12 flex-column d-flex justify-content-center align-items-center">
+      <div className="w-25 text-center">
+        <span className="red">회원가입</span>(상단 오른쪽) 후{" "}
+        <span className="red">로그인</span>하셔야 서비스를 이용할 수 있습니다.
+      </div>
       <div className="card card-container">
         <img
           src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"

@@ -20,6 +20,7 @@ import ForgotPassword from "./components/ForgotPassword";
 
 export const IsLogin = createContext();
 export const UserData = createContext();
+export const HasRequired = createContext();
 
 const program = "tutor";
 const start_year = "2020";
@@ -69,6 +70,7 @@ const App = (props) => {
   const [userData, setUserData] = useState({
     name: "name",
   });
+  const [hasRequired, setHasRequired] = useState(false);
 
   const handleChangeUserData = (newData) => {
     setUserData((state) => {
@@ -81,13 +83,14 @@ const App = (props) => {
       .get("/api/accounts/auth")
       .then((res) => {
         const data = res.data;
-        if (!loginStatus) {
-          setLoginStatus(data.success);
-          handleChangeUserData(data.account);
-        }
+        
+        setLoginStatus(data.success);
+        handleChangeUserData(data.account);
+        
+        setHasRequired(false);
       })
       .catch((err) => console.log("로그인 에러", err));
-  });
+  }, [loginStatus]);
 
   useEffect(() => {
     axios

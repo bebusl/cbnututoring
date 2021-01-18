@@ -3,7 +3,7 @@ import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import AuthService from "../services/auth.service";
-import {toaster} from "evergreen-ui"
+import { toaster } from "evergreen-ui";
 import { isEmail } from "validator";
 
 function useForm({ initialValues, onSubmit, validate }) {
@@ -113,7 +113,7 @@ const Register = (props) => {
           console.log(response);
           setMessage("회원가입성공");
           setSuccessful(true);
-         props.history.push("/login");
+          props.history.push("/login");
         },
         (error) => {
           console.log("회원가입 에러 : ", error);
@@ -141,107 +141,106 @@ const Register = (props) => {
         />
 
         <Form onSubmit={handleRegister} ref={form}>
-          
-            <div>
-              <div className="form-group">
-                <label htmlFor="_id">ID/학번</label>
-                <Input
-                  type="text"
-                  className="form-control"
-                  name="_id"
-                  value={values._id}
-                  onChange={handleChange}
-                  validations={[required, vusername]}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="password">비밀번호</label>
-                <Input
-                  type="password"
-                  className="form-control"
-                  name="password"
-                  value={values.password}
-                  onChange={handleChange}
-                  validations={[required]}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="checkPassword">비밀번호 확인</label>
-                <Input
-                  type="password"
-                  className="form-control"
-                  name="checkPassword"
-                  value={values.checkPassword}
-                  onChange={handleChange}
-                  validations={[required, validPassword]}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="name">이름</label>
-                <Input
-                  type="text"
-                  className="form-control"
-                  name="name"
-                  value={values.name}
-                  onChange={handleChange}
-                  validations={[required]}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="email">이메일</label>
-                <Input
-                  type="text"
-                  className="form-control"
-                  name="email"
-                  value={values.email}
-                  onChange={handleChange}
-                  validations={[required, validEmail]}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="phoneNumber">휴대폰번호</label>
-                <Input
-                  type="text"
-                  className="form-control"
-                  name="phoneNumber"
-                  value={values.phoneNumber}
-                  onChange={handleChange}
-                  validations={[required]}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="department">학과</label>
-                <select
-                  name="department"
-                  value={values.department}
-                  onChange={handleChange}
-                >
-                  <option value="0">컴퓨터공학과</option>
-                  <option value="1">소프트웨어학과</option>
-                  <option value="2">정보통신공학과</option>
-                  <option value="3">지능로봇공학과</option>
-                </select>
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="role">직위</label>
-                <select name="role" value={values.role} onChange={handleChange}>
-                  <option value="0">학부생</option>
-                  <option value="1">대학원생</option>
-                  <option value="2">교직원</option>
-                </select>
-              </div>
-
-              <div className="form-group">
-                <button className="btn btn-primary btn-block">회원가입</button>
-              </div>
+          <div>
+            <div className="form-group">
+              <label htmlFor="_id">학번</label>
+              <Input
+                type="text"
+                className="form-control"
+                name="_id"
+                value={values._id}
+                onChange={handleChange}
+                validations={[required, vusername]}
+              />
             </div>
-          
+
+            <div className="form-group">
+              <label htmlFor="password">비밀번호</label>
+              <Input
+                type="password"
+                className="form-control"
+                name="password"
+                value={values.password}
+                onChange={handleChange}
+                validations={[required]}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="checkPassword">비밀번호 확인</label>
+              <Input
+                type="password"
+                className="form-control"
+                name="checkPassword"
+                value={values.checkPassword}
+                onChange={handleChange}
+                validations={[required, validPassword]}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="name">이름</label>
+              <Input
+                type="text"
+                className="form-control"
+                name="name"
+                value={values.name}
+                onChange={handleChange}
+                validations={[required]}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="email">이메일</label>
+              <Input
+                type="text"
+                className="form-control"
+                name="email"
+                value={values.email}
+                onChange={handleChange}
+                validations={[required, validEmail]}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="phoneNumber">휴대폰번호</label>
+              <Input
+                type="text"
+                className="form-control"
+                name="phoneNumber"
+                placeholder="-제외. 예시 : 01012345678"
+                value={values.phoneNumber}
+                onChange={handleChange}
+                validations={[required]}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="department">학과</label>
+              <select
+                name="department"
+                value={values.department}
+                onChange={handleChange}
+              >
+                <option value="0">컴퓨터공학과</option>
+                <option value="1">소프트웨어학과</option>
+                <option value="2">정보통신공학과</option>
+                <option value="3">지능로봇공학과</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="role">직위</label>
+              <select name="role" value={values.role} onChange={handleChange}>
+                <option value="0">학부생</option>
+                <option value="1">대학원생</option>
+                <option value="2">교직원</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <button className="btn btn-primary btn-block">회원가입</button>
+            </div>
+          </div>
 
           {message && (
             <div className="form-group">

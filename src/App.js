@@ -88,10 +88,10 @@ const App = (props) => {
     axios
       .get("/api/accounts/auth")
       .then((res) => {
-        if (res.data.success === true && !loginStatus) {
+        if (res.data.success) {
           setLoginStatus(true);
           handleChangeUserData(res.data.account);
-        } else if (res.data.success === false) {
+        } else {
           setLoginStatus(false);
           handleChangeUserData({});
         }

@@ -148,7 +148,18 @@ function Table({
                           hasFooter: true,
                           content: (
                             <div>
-                              <p>{data.profile}</p>
+                              <p>
+                                {data.profile
+                                  .split("<br/>")
+                                  .map((item, idx) => {
+                                    return (
+                                      <React.Fragment key={idx}>
+                                        {item}
+                                        <br />
+                                      </React.Fragment>
+                                    );
+                                  })}
+                              </p>
                             </div>
                           ),
                         });

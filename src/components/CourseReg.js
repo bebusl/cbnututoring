@@ -22,6 +22,7 @@ function useForm({ initialValues, history }) {
     setSubmitting(true);
     event.preventDefault();
     const sendForm = new FormData();
+    setValues({...values,["profile"]:values.profile.replace("\n/g", "<br>")});
     for (const i in values) {
       console.log("제출데이터 : ", i, " ", values[i]);
       sendForm.append(i, values[i]);
@@ -158,6 +159,7 @@ export default function CourseReg({ years, history }) {
           <li>
             <label htmlFor="profile">튜터프로필</label>
             <textarea
+            wrap="hard"
               id="profile"
               name="profile"
               rows="5"

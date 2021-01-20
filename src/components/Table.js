@@ -4,8 +4,6 @@ import { UserData } from "../App";
 import {
   Table as TableUI,
   Button,
-  IconButton,
-  PlusIcon,
   Dialog,
   Pane,
   toaster,
@@ -99,7 +97,7 @@ function Table({
             <TableUI.TextHeaderCell>교과목명</TableUI.TextHeaderCell>
             <TableUI.TextHeaderCell>담당교수</TableUI.TextHeaderCell>
             <TableUI.TextHeaderCell>튜터명</TableUI.TextHeaderCell>
-            <TableUI.TextHeaderCell flexBasis={90} flexShrink={0} flexGrow={0}>
+            <TableUI.TextHeaderCell flexBasis={120} flexShrink={0} flexGrow={0}>
               튜터프로필
             </TableUI.TextHeaderCell>
             {isAllList ? (
@@ -130,10 +128,9 @@ function Table({
                   <TableUI.TextCell>{data.courseName}</TableUI.TextCell>
                   <TableUI.TextCell>{data.professorName}</TableUI.TextCell>
                   <TableUI.TextCell>{data.tutorName}</TableUI.TextCell>
-                  <TableUI.TextCell flexBasis={90} flexShrink={0} flexGrow={0}>
-                    <IconButton
+                  <TableUI.TextCell flexBasis={120} flexShrink={0} flexGrow={0}>
+                    <Button
                       height={32}
-                      icon={PlusIcon}
                       onClick={() => {
                         handleDialog({
                           title: "튜터 프로필",
@@ -147,7 +144,7 @@ function Table({
                         });
                         setIsShown(true);
                       }}
-                    />
+                    >프로필 보기</Button>
                   </TableUI.TextCell>
                   {isAllList ? (
                     <TableUI.TextCell

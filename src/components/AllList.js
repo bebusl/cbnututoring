@@ -3,7 +3,7 @@ import Table from "./Table";
 import axios from "axios";
 
 const AllList = ({ years, isCourseManage = false }) => {
-  const [year, setYear] = useState(2020);
+  const [year, setYear] = useState(2021);
   const [semester, setSemester] = useState(1);
   const [datas, setDatas] = useState();
   const isAlllist = !isCourseManage;

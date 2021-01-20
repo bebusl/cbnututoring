@@ -18,6 +18,11 @@ function Menu(props) {
       to: "/mylist",
       component: <div>내 수강 목록</div>,
     },
+    {
+      title: "보고서 등록",
+      to: "/reportreg",
+      component: <div>보고서 등록</div>,
+    },
   ];
   const adminNav = [
     { title: "강좌 등록", to: "/coursereg", component: <div>강좌 등록</div> },

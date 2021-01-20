@@ -8,7 +8,7 @@ import styled from "styled-components";
 
 const department = ["컴퓨터공학과", "소프트웨어학과", "정보통신학과", "로봇"];
 const week = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-const year = [2020, 2021, 2022, 2023, 2024, 2025, 2026];
+const year = [2021, 2022, 2023, 2024, 2025, 2026];
 
 const Enrolment = ({ onSubmit, data }) => {
   const { userData } = useContext(UserData);
@@ -71,11 +71,13 @@ const CourseModify = ({ onSubmit, data }) => {
     professorName: data.professorName,
     tutorName: data.tutorName,
     tutorNumber: data.tutorNumber,
+    profile: data.profile,
     limit: data.limit,
     file: data.file,
   });
 
   const handleChange = (e) => {
+    console.log(data);
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
@@ -207,6 +209,14 @@ const CourseModify = ({ onSubmit, data }) => {
               value={values.tutorNumber}
               onChange={handleChange}
             ></input>
+          </li>
+          <li>
+            <label htmlFor="profile">튜터프로필</label>
+            <textarea
+              name="profile"
+              value={values.profile}
+              onChange={handleChange}
+            />
           </li>
           <li>
             <label htmlFor="limit">최대인원</label>

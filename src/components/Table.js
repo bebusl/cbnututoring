@@ -4,8 +4,6 @@ import { UserData } from "../App";
 import {
   Table as TableUI,
   Button,
-  IconButton,
-  PlusIcon,
   Dialog,
   Pane,
   toaster,
@@ -23,6 +21,7 @@ function Table({
   isAllList = false,
   isCourseManage = false,
   isMylist = false,
+  isReportReg = false,
   year,
   semester,
 }) {
@@ -103,15 +102,24 @@ function Table({
               튜터프로필
             </TableUI.TextHeaderCell>
             {isAllList ? (
-              <TableUI.TextHeaderCell
-                flexBasis={50}
-                flexShrink={0}
-                flexGrow={0}
-              >
-                신청인원
-              </TableUI.TextHeaderCell>
+              <>
+                <TableUI.TextHeaderCell
+                  flexBasis={50}
+                  flexShrink={0}
+                  flexGrow={0}
+                >
+                  신청인원
+                </TableUI.TextHeaderCell>
+                <TableUI.TextHeaderCell
+                  flexBasis={100}
+                  flexShrink={0}
+                  flexGrow={0}
+                >
+                  운영계획서
+                </TableUI.TextHeaderCell>
+              </>
             ) : undefined}
-            <TableUI.TextHeaderCell flexBasis={250} flexShrink={0} flexGrow={0}>
+            <TableUI.TextHeaderCell flexBasis={200} flexShrink={0} flexGrow={0}>
               {" "}
             </TableUI.TextHeaderCell>
           </TableUI.Head>
@@ -131,9 +139,8 @@ function Table({
                   <TableUI.TextCell>{data.professorName}</TableUI.TextCell>
                   <TableUI.TextCell>{data.tutorName}</TableUI.TextCell>
                   <TableUI.TextCell flexBasis={90} flexShrink={0} flexGrow={0}>
-                    <IconButton
+                    <Button
                       height={32}
-                      icon={PlusIcon}
                       onClick={() => {
                         handleDialog({
                           title: "튜터 프로필",
@@ -147,44 +154,54 @@ function Table({
                         });
                         setIsShown(true);
                       }}
-                    />
+                    >
+                      프로필 보기
+                    </Button>
                   </TableUI.TextCell>
                   {isAllList ? (
-                    <TableUI.TextCell
-                      flexBasis={50}
-                      flexShrink={0}
-                      flexGrow={0}
-                    >
-                      {data.appliedCount}
-                    </TableUI.TextCell>
+                    <>
+                      <TableUI.TextCell
+                        flexBasis={50}
+                        flexShrink={0}
+                        flexGrow={0}
+                      >
+                        {data.appliedCount}
+                      </TableUI.TextCell>
+                      <TableUI.TextCell
+                        flexBasis={100}
+                        flexShrink={0}
+                        flexGrow={0}
+                      >
+                        <Button
+                          appearance="minimal"
+                          onClick={() => {
+                            Axios({
+                              url: `/api/courses/download/${data.fileId}`,
+                              method: "GET",
+                              responseType: "blob",
+                            })
+                              .then((res) => {
+                                fileDownload(
+                                  res.data,
+                                  `${decodeURIComponent(
+                                    res.headers["file-name"]
+                                  )}`
+                                );
+                              })
+                              .catch((error) => console.log(error));
+                          }}
+                        >
+                          다운로드
+                        </Button>
+                      </TableUI.TextCell>
+                    </>
                   ) : undefined}
                   {isAllList ? (
                     <TableUI.TextCell
-                      flexBasis={250}
+                      flexBasis={200}
                       flexShrink={0}
                       flexGrow={0}
                     >
-                      <Button
-                        appearance="minimal"
-                        onClick={() => {
-                          Axios({
-                            url: `/api/courses/download/${data.fileId}`,
-                            method: "GET",
-                            responseType: "blob",
-                          })
-                            .then((res) => {
-                              fileDownload(
-                                res.data,
-                                `${decodeURIComponent(
-                                  res.headers["file-name"]
-                                )}`
-                              );
-                            })
-                            .catch((error) => console.log(error));
-                        }}
-                      >
-                        운영 계획서
-                      </Button>
                       <Button
                         appearance="minimal"
                         disabled={
@@ -379,9 +396,16 @@ function Table({
                       >
                         신청취소
                       </Button>
+                    </TableUI.TextCell>
+                  ) : undefined}
+                  {isReportReg ? (
+                    <TableUI.TextCell
+                      flexBasis={180}
+                      flexShrink={0}
+                      flexGrow={0}
+                    >
                       <Button
                         appearance="minimal"
-                        disabled={data.tutorNumber !== userData._id}
                         onClick={() => {
                           handleDialog({
                             title: "보고서 등록",

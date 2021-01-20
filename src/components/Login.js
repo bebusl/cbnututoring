@@ -49,9 +49,7 @@ const Login = (props) => {
       const response = await AuthService.login(username, password).catch(
         (error) => {
           setLoginStatus(false);
-          toaster.danger(
-            "로그인 실패 : 아이디/비밀번호와 인터넷 상태를 확인해주세요"
-          );
+          toaster.danger("로그인 실패 : 아이디/비밀번호를 확인해주세요");
           setLoading(false);
           setPassword("");
           props.history.push("/login");
@@ -89,7 +87,7 @@ const Login = (props) => {
 
         <Form onSubmit={handleLogin} ref={form}>
           <div className="form-group">
-            <label htmlFor="username">ID/학번</label>
+            <label htmlFor="username">학번</label>
             <Input
               type="text"
               className="form-control"

@@ -5,7 +5,7 @@ import Axios from "axios";
 const fileDownload = require("js-file-download");
 
 function Report({ years }) {
-  const [year, setYear] = useState(2020);
+  const [year, setYear] = useState(2021);
   const [semester, setSemester] = useState(1);
   const [datas, setDatas] = useState();
   const [selectWeek, setWeek] = useState(1);
@@ -74,7 +74,6 @@ function Report({ years }) {
           <div className="yearWrap">
             년도{" "}
             <select name="year" value={year} onChange={yearChange}>
-              <option value={2020}>2020</option>
               <option value={2021}>2021</option>
               <option value={2022}>2022</option>
               <option value={2023}>2023</option>

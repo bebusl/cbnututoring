@@ -59,7 +59,7 @@ function useForm({ initialValues, history }) {
 export default function CourseReg({ years, history }) {
   const { handleChange, handleSubmit, handleFileChange } = useForm({
     initialValues: {
-      year: "2020",
+      year: "2021",
       semester: "1",
       department: "0",
       grade: "1",

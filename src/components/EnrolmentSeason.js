@@ -6,7 +6,7 @@ const EnrolmentSeason = (props) => {
   const [values, setValues] = useState({
     start: "",
     end: "",
-    year: 2020,
+    year: 2021,
     semester: 1,
   });
 
@@ -22,18 +22,14 @@ const EnrolmentSeason = (props) => {
         }
       })
       .catch((error) => console.log(error));
-  }, []);
+  }, [values.year, values.semester]);
+
   useEffect(() => {
     Axios.get(`/api/systems/find/1/${values.year}/${values.semester}`)
       .then((res) => {
-        if (
-          res.data.result !== null &&
-          res.data.result.start !== setTime_start &&
-          res.data.result.end !== setTime_end
-        ) {
+        if (res.data.result !== null) {
           settingEndTime(res.data.result.end);
           settingStartTime(res.data.result.start);
-          console.log("될까?", setTime_start, res.data.result.start);
         }
       })
       .catch((error) => console.log(error));
@@ -93,7 +89,8 @@ const EnrolmentSeason = (props) => {
         </div>
         <h5>수강신청 기간 설정</h5>
         <p>
-          현재기간 : {toDate(setTime_start)} ~ {toDate(setTime_end)}
+          {values.year}년 {values.semester}학기 수강신청기간 :{" "}
+          {toDate(setTime_start)} ~ {toDate(setTime_end)}
         </p>
         <input
           type="date"

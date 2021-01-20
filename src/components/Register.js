@@ -110,9 +110,8 @@ const Register = (props) => {
     if (checkBtn.current.context._errors.length === 0) {
       result.then(
         (response) => {
-          console.log(response);
-          setMessage("회원가입성공");
           setSuccessful(true);
+          toaster.success("회원가입에 성공했습니다.");
           props.history.push("/login");
         },
         (error) => {
@@ -123,8 +122,7 @@ const Register = (props) => {
               error.response.data.message) ||
             error.message ||
             error.toString();
-
-          setMessage("이미 가입되어 있는 회원입니다.");
+          toaster.warning("이미 가입되어 있는 회원입니다.");
           setSuccessful(false);
         }
       );

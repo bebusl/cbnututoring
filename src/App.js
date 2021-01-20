@@ -17,12 +17,13 @@ import EnrolmentSeason from "./components/EnrolmentSeason";
 import User from "./components/User";
 import Report from "./components/Report";
 import ForgotPassword from "./components/ForgotPassword";
+import ReportReg from "./components/ReportReg";
 
 export const IsLogin = createContext();
 export const UserData = createContext();
 
 const program = "tutor";
-const start_year = "2020";
+const start_year = "2021";
 const today = new Date();
 //const today_year = today.getFullYear() + 1;
 let years = [];
@@ -39,6 +40,11 @@ const studentNav = [
     title: "내 수강 목록",
     to: "/mylist",
     component: (props) => <MyList years={years} {...props} />,
+  },
+  {
+    title: "보고서 등록",
+    to: "/reportreg",
+    component: (props) => <ReportReg {...props} />,
   },
 ];
 const adminNav = [
@@ -80,10 +86,12 @@ const App = (props) => {
     axios
       .get("/api/accounts/auth")
       .then((res) => {
-        const data = res.data;
-        if (!loginStatus) {
-          setLoginStatus(data.success);
-          handleChangeUserData(data.account);
+        if (res.data.success == true && !loginStatus) {
+          setLoginStatus(true);
+          handleChangeUserData(res.data.account);
+        } else if (res.data.success == false) {
+          setLoginStatus(false);
+          handleChangeUserData({});
         }
       })
       .catch((err) => console.log("로그인 에러", err));
@@ -97,7 +105,7 @@ const App = (props) => {
   }, []);
 
   const logOut = async () => {
-    await AuthService.logout().then(setLoginStatus(false));
+    await AuthService.logout().then((res) => console.log(res));
   };
 
   return (

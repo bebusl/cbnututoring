@@ -98,7 +98,7 @@ function Table({
             <TableUI.TextHeaderCell>교과목명</TableUI.TextHeaderCell>
             <TableUI.TextHeaderCell>담당교수</TableUI.TextHeaderCell>
             <TableUI.TextHeaderCell>튜터명</TableUI.TextHeaderCell>
-            <TableUI.TextHeaderCell flexBasis={90} flexShrink={0} flexGrow={0}>
+            <TableUI.TextHeaderCell flexBasis={120} flexShrink={0} flexGrow={0}>
               튜터프로필
             </TableUI.TextHeaderCell>
             {isAllList ? (

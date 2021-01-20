@@ -21,6 +21,7 @@ import ReportReg from "./components/ReportReg";
 
 export const IsLogin = createContext();
 export const UserData = createContext();
+export const HasRequired = createContext();
 
 const program = "tutor";
 const start_year = "2021";
@@ -75,6 +76,7 @@ const App = (props) => {
   const [userData, setUserData] = useState({
     name: "name",
   });
+  const [hasRequired, setHasRequired] = useState(false);
 
   const handleChangeUserData = (newData) => {
     setUserData((state) => {
@@ -86,16 +88,16 @@ const App = (props) => {
     axios
       .get("/api/accounts/auth")
       .then((res) => {
-        if (res.data.success == true && !loginStatus) {
+        if (res.data.success === true && !loginStatus) {
           setLoginStatus(true);
           handleChangeUserData(res.data.account);
-        } else if (res.data.success == false) {
+        } else if (res.data.success === false) {
           setLoginStatus(false);
           handleChangeUserData({});
         }
       })
       .catch((err) => console.log("로그인 에러", err));
-  });
+  }, [loginStatus]);
 
   useEffect(() => {
     axios

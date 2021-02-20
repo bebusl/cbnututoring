@@ -1,7 +1,7 @@
 import React, { useState, useRef, useContext } from "react";
 import { toaster } from "evergreen-ui";
 import { Link } from "react-router-dom";
-import { IsLogin } from "../App";
+import { IsLogin,UserData } from "../App";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
@@ -26,7 +26,7 @@ const Login = (props) => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const { loginStatus, setLoginStatus } = useContext(IsLogin);
-
+  const { userData,setUserData} =useContext(UserData);
   const onChangeUsername = (e) => {
     const username = e.target.value;
     setUsername(username);
@@ -58,6 +58,8 @@ const Login = (props) => {
       if (response !== undefined) {
         if (response.data.success === true) {
           setLoginStatus(true); //로그인 성공시 status true로 바꿔서 헤더랑 이것저것 권한 되겡
+          console.log("로그인 정보",response.data);
+          setUserData({...UserData,...response.data.account})
           toaster.success("로그인을 성공했습니다."); //로그인 성공시 유저 데이터 불러옴.
           username === "admin"
             ? props.history.push("/tutor/admin/coursemanage")

@@ -1,39 +1,41 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import {IsLogin, UserData} from "../App";
+import {toaster} from "evergreen-ui";
+
 import Table from "./Table";
 import axios from "axios";
 
-const AllList = ({ years, isCourseManage = false }) => {
-  const [year, setYear] = useState(2021);
-  const [semester, setSemester] = useState(1);
+const AllList = ({ years, isCourseManage = false ,history}) => {
+  const [year, setYear] = useState(window.localStorage.getItem("year"));
+  const [semester, setSemester] = useState(window.localStorage.getItem("semester"));
   const [datas, setDatas] = useState();
+  const { loginStatus, setLoginStatus } = useContext(IsLogin);
+  const { userData, setUserData} = useContext(UserData);
   const isAlllist = !isCourseManage;
 
   useEffect(() => {
-    const tempYear = window.localStorage.getItem("year");
-    const tempSemester = window.localStorage.getItem("semester");
-    if (tempYear !== null && tempYear !== year) {
-      setYear(tempYear);
-    }
-    if (tempSemester !== null && tempSemester !== semester) {
-      setSemester(tempSemester);
-    }
-
+    setYear(window.localStorage.getItem("year"));
+    setSemester(window.localStorage.getItem("semester"));
     search();
   }, []);
 
   const yearChange = (e) => {
     if (e.target.name === "year") {
       setYear(e.target.value);
+      window.localStorage.setItem("year",e.target.value);
     } else {
       setSemester(e.target.value);
+      window.localStorage.setItem("semester",e.target.value);
     }
   };
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
-    search();
+    console.log("whyyyyy",year,semester);
     window.localStorage.setItem("year", year);
     window.localStorage.setItem("semester", semester);
+    search();
+
   };
 
   const search = () => {
@@ -41,7 +43,13 @@ const AllList = ({ years, isCourseManage = false }) => {
       .get(`/api/courses/find/${year}/${semester}`)
       .then(function (response) {
         console.log("검색결과", response);
-        if (response.data.courseData !== datas) {
+        if(response.data.success ===false){
+          setLoginStatus(false);
+          setUserData({});
+          toaster.danger("다른 컴퓨터에서 로그인이 되어서 종료됩니다.");
+          history.push("/login")
+        }
+        else if (response.data.courseData !== datas) {
           setDatas(response.data.courseData);
         }
       })

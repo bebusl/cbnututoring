@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
-import { UserData } from "../App";
+import { UserData, IsLogin } from "../App";
 import {
   Table as TableUI,
   Button,
@@ -25,7 +26,8 @@ function Table({
   year,
   semester,
 }) {
-  const { userData } = useContext(UserData);
+  const { userData, setUserData } = useContext(UserData);
+  const { loginStatus, setLoginStatus } = useContext(IsLogin);
   const [mylistData, setmylistdata] = useState();
   const [accessSeason, setAccessSeason] = useState(true);
   const [isShown, setIsShown] = useState(false);
@@ -35,10 +37,17 @@ function Table({
     content: "",
     hasFooter: false,
   });
+  const history = useHistory();
 
   useEffect(() => {
     Axios.get(`/api/systems/find/1/${year}/${semester}`)
       .then((res) => {
+        if (res.data.success === false && res.data.msg === "인증 실패!") {
+          setLoginStatus(false);
+          setUserData({});
+          toaster.danger("다른 컴퓨터에서 로그인이 되어서 종료됩니다.");
+          history.push("/login");
+        }
         if (
           res.data.result.start > Date.now() ||
           Date.now() > res.data.result.end
@@ -54,6 +63,15 @@ function Table({
 
     Axios.get(`/api/registration/`)
       .then(function (response) {
+        if (
+          response.data.success === false &&
+          response.data.msg === "인증 실패!"
+        ) {
+          setLoginStatus(false);
+          setUserData({});
+          toaster.danger("다른 컴퓨터에서 로그인이 되어서 종료됩니다.");
+          history.push("/login");
+        }
         setmylistdata(response.data.result);
       })
       .catch((error) => console.log("whyrano", error));
@@ -82,6 +100,7 @@ function Table({
         title={dialog.title}
         onCloseComplete={() => {
           setIsShown(false);
+          setDialog({ ...dialog, hasFooter: false });
         }}
         confirmLabel={dialog.confirmLabel}
         hasFooter={dialog.hasFooter}
@@ -149,16 +168,14 @@ function Table({
                           content: (
                             <div>
                               <p>
-                                {data.profile
-                                  .split("<br/>")
-                                  .map((item, idx) => {
-                                    return (
-                                      <React.Fragment key={idx}>
-                                        {item}
-                                        <br />
-                                      </React.Fragment>
-                                    );
-                                  })}
+                                {data.profile.split("\n").map((item, idx) => {
+                                  return (
+                                    <React.Fragment key={idx}>
+                                      {item}
+                                      <br />
+                                    </React.Fragment>
+                                  );
+                                })}
                               </p>
                             </div>
                           ),
@@ -192,6 +209,17 @@ function Table({
                               responseType: "blob",
                             })
                               .then((res) => {
+                                if (
+                                  res.data.success === false &&
+                                  res.data.msg === "인증 실패!"
+                                ) {
+                                  setLoginStatus(false);
+                                  setUserData({});
+                                  toaster.danger(
+                                    "다른 컴퓨터에서 로그인이 되어서 종료됩니다."
+                                  );
+                                  history.push("/login");
+                                }
                                 fileDownload(
                                   res.data,
                                   `${decodeURIComponent(
@@ -199,7 +227,12 @@ function Table({
                                   )}`
                                 );
                               })
-                              .catch((error) => console.log(error));
+                              .catch((error) => {
+                                toaster.warning(
+                                  "운영계획서가 등록되어 있지 않습니다."
+                                );
+                                console.log(error);
+                              });
                           }}
                         >
                           다운로드
@@ -299,8 +332,17 @@ function Table({
                                   onClick={() => {
                                     User.courseDelete(data.id)
                                       .then((res) => {
-                                        console.log("코스삭제 오류 확인", res);
-                                        if (res.data.success === true) {
+                                        if (
+                                          res.data.success === false &&
+                                          res.data.msg === "인증 실패!"
+                                        ) {
+                                          setLoginStatus(false);
+                                          setUserData({});
+                                          toaster.danger(
+                                            "다른 컴퓨터에서 로그인이 되어서 종료됩니다."
+                                          );
+                                          history.push("/login");
+                                        } else if (res.data.success === true) {
                                           toaster.success(
                                             "코스 삭제 완료되었습니다.",
                                             { duration: 3 }
@@ -377,7 +419,17 @@ function Table({
                                   onClick={() => {
                                     User.cancleRegCourse(data.id).then(
                                       (res) => {
-                                        if (res.data.success === true) {
+                                        if (
+                                          res.data.success === false &&
+                                          res.data.msg === "인증 실패!"
+                                        ) {
+                                          setLoginStatus(false);
+                                          setUserData({});
+                                          toaster.danger(
+                                            "다른 컴퓨터에서 로그인이 되어서 종료됩니다."
+                                          );
+                                          history.push("/login");
+                                        } else if (res.data.success === true) {
                                           console.log(res.data);
                                           toaster.success(
                                             "수강 취소 완료되었습니다.",

@@ -1,22 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { IsLogin, UserData } from "../App";
 import axios from "axios";
-import { Table, Button, Select } from "evergreen-ui";
+import { Table, Button, Select, toaster } from "evergreen-ui";
 import Axios from "axios";
 const fileDownload = require("js-file-download");
 
-function Report({ years }) {
-  const [year, setYear] = useState(2021);
-  const [semester, setSemester] = useState(1);
+function Report({ years, history }) {
+  const [year, setYear] = useState(window.localStorage.getItem("year"));
+  const [semester, setSemester] = useState(
+    window.localStorage.getItem("semester")
+  );
   const [datas, setDatas] = useState();
   const [selectWeek, setWeek] = useState(1);
+  const { loginStatus, setLoginStatus } = useContext(IsLogin);
+  const { userData, setUserData } = useContext(UserData);
   const week = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
   const X = "X";
 
   const yearChange = (e) => {
     if (e.target.name === "year") {
       setYear(e.target.value);
+      window.localStorage.setItem("year", year);
     } else {
       setSemester(e.target.value);
+      window.localStorage.setItem("semester", semester);
     }
   };
 
@@ -31,6 +38,13 @@ function Report({ years }) {
       },
     })
       .then((res) => {
+        if (res.data.success === false && res.data.msg === "인증 실패!") {
+          setLoginStatus(false);
+          setUserData({});
+          toaster.danger("다른 컴퓨터에서 로그인이 되어서 종료됩니다.");
+          history.push("/login");
+        }
+
         fileDownload(
           res.data,
           `${decodeURIComponent(res.headers["file-name"])}`
@@ -43,7 +57,14 @@ function Report({ years }) {
     axios
       .post("/api/reports/find/", { year: year, semester: semester })
       .then((res) => {
+        if (res.data.success === false && res.data.msg === "인증 실패!") {
+          setLoginStatus(false);
+          setUserData({});
+          toaster.danger("다른 컴퓨터에서 로그인이 되어서 종료됩니다.");
+          history.push("/login");
+        }
         setDatas(res.data.courseData);
+        console.log("네가 찾는 바로 그것!", res.data);
       })
       .catch((error) => console.log(error));
   }, []);
@@ -57,8 +78,12 @@ function Report({ years }) {
         week: week,
       })
       .then((res) => {
-        console.log("이번엔 위크넣어서", res);
-
+        if (res.data.success === false && res.data.msg === "인증 실패!") {
+          setLoginStatus(false);
+          setUserData({});
+          toaster.danger("다른 컴퓨터에서 로그인이 되어서 종료됩니다.");
+          history.push("/login");
+        }
         if (datas !== res.data.courseData) {
           setDatas(res.data.courseData);
         }
@@ -142,13 +167,24 @@ function Report({ years }) {
                         },
                       })
                         .then((res) => {
+                          if (
+                            res.data.success === false &&
+                            res.data.msg === "인증 실패!"
+                          ) {
+                            setLoginStatus(false);
+                            setUserData({});
+                            toaster.danger(
+                              "다른 컴퓨터에서 로그인이 되어서 종료됩니다."
+                            );
+                            history.push("/login");
+                          }
                           console.log("집파일 맞나유~", res);
                           fileDownload(
                             res.data,
                             `${decodeURIComponent(res.headers["file-name"])}`
                           );
                         })
-                        .catch((err) => console.log("왜안뒈..", err));
+                        .catch((err) => toaster.warning("다운로드 실패" + err));
                     }}
                   >
                     다운로드
@@ -156,6 +192,51 @@ function Report({ years }) {
                 </Table.TextCell>
               </Table.Row>
             ))}
+          <Table.Row>
+            {week.map((sweek) => {
+              return (
+                <Table.TextCell>
+                  <Button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      console.log("qhsoTjdyd");
+                      Axios({
+                        url: `/api/reports/downloads`,
+                        method: "POST",
+                        responseType: "blob",
+                        data: {
+                          week: sweek,
+                          year: year,
+                          semester: semester,
+                        },
+                      })
+                        .then((res) => {
+                          console.log("");
+                          if (
+                            res.data.success === false &&
+                            res.data.msg === "인증 실패!"
+                          ) {
+                            setLoginStatus(false);
+                            setUserData({});
+                            toaster.danger(
+                              "다른 컴퓨터에서 로그인이 되어서 종료됩니다."
+                            );
+                            history.push("/login");
+                          }
+                          fileDownload(
+                            res.data,
+                            `${decodeURIComponent(res.headers["file-name"])}`
+                          );
+                        })
+                        .catch((err) => toaster.warning("다운로드 실패" + err));
+                    }}
+                  >
+                    다운
+                  </Button>
+                </Table.TextCell>
+              );
+            })}
+          </Table.Row>
         </Table.Body>
       </Table>
       <form
@@ -173,12 +254,18 @@ function Report({ years }) {
             },
           })
             .then((res) => {
+              if (res.data.success === false && res.data.msg === "인증 실패!") {
+                setLoginStatus(false);
+                setUserData({});
+                toaster.danger("다른 컴퓨터에서 로그인이 되어서 종료됩니다.");
+                history.push("/login");
+              }
               fileDownload(
                 res.data,
                 `${decodeURIComponent(res.headers["file-name"])}`
               );
             })
-            .catch((err) => null);
+            .catch((err) => toaster.warning("다운로드 실패" + err));
         }}
       >
         <Select

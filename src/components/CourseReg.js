@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { IsLogin, UserData } from "../App";
 import { Redirect } from "react-router-dom";
 import { toaster } from "evergreen-ui";
 import axios from "axios";
@@ -6,6 +7,8 @@ import axios from "axios";
 function useForm({ initialValues, history }) {
   const [values, setValues] = useState(initialValues);
   const [submitting, setSubmitting] = useState(false);
+  const { loginStatus, setLoginStatus } = useContext(IsLogin);
+  const { userData, setUserData } = useContext(UserData);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,9 +25,12 @@ function useForm({ initialValues, history }) {
     setSubmitting(true);
     event.preventDefault();
     const sendForm = new FormData();
-    setValues({...values,["profile"]:values.profile.replace("\n/g", "<br>")});
+    setValues({
+      ...values,
+      ["profile"]: values.profile.replace("\n/g", "<br>"),
+    });
     for (const i in values) {
-      console.log("제출데이터 : ", i, " ", values[i]);
+      if (i.length < 1) break;
       sendForm.append(i, values[i]);
     }
 
@@ -37,12 +43,17 @@ function useForm({ initialValues, history }) {
       },
     })
       .then(function (response) {
-        console.log("코스등록 이벤트 : ", response);
         if (response.data.success === true) {
           toaster.success("강좌 등록을 성공했습니다.");
           history.push("/tutor/admin/coursemanage");
+        } else if (response.data.success === false) {
+          setLoginStatus(false);
+          setUserData({});
+          toaster.danger("다른 컴퓨터에서 로그인이 되어서 종료됩니다.");
+          history.push("/login");
         } else {
-          toaster.danger("강좌 등록을 실패했습니다." + response.data);
+          console.log("강좌 등록 실패", response.data);
+          toaster.danger("강좌 등록을 실패했습니다.");
         }
       })
       .catch((error) => toaster.danger("에러가 발생했습니다." + error));
@@ -154,12 +165,12 @@ export default function CourseReg({ years, history }) {
           </li>
           <li>
             <label htmlFor="limit">최대인원</label>
-            <input type="text" name="limit" onChange={handleChange}></input>
+            <input type="number" name="limit" onChange={handleChange}></input>
           </li>
           <li>
             <label htmlFor="profile">튜터프로필</label>
             <textarea
-            wrap="hard"
+              wrap="hard"
               id="profile"
               name="profile"
               rows="5"

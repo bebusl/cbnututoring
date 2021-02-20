@@ -1,13 +1,16 @@
 import Axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { UserData, IsLogin } from "../App";
 import { toaster } from "evergreen-ui";
 
 const EnrolmentSeason = (props) => {
+  const { userData, setUserData } = useContext(UserData);
+  const { loginStatus, setLoginStatus } = useContext(IsLogin);
   const [values, setValues] = useState({
     start: "",
     end: "",
-    year: 2021,
-    semester: 1,
+    year: window.localStorage.getItem("year"),
+    semester: window.localStorage.getItem("semester"),
   });
 
   const [setTime_start, settingStartTime] = useState(0);
@@ -19,6 +22,14 @@ const EnrolmentSeason = (props) => {
         if (res.data.result !== null) {
           settingEndTime(res.data.result.end);
           settingStartTime(res.data.result.start);
+        } else if (
+          res.data.success === false &&
+          res.data.msg === "인증 실패!"
+        ) {
+          setLoginStatus(false);
+          setUserData({});
+          toaster.danger("다른 컴퓨터에서 로그인이 되어서 종료됩니다.");
+          props.history.push("/login");
         }
       })
       .catch((error) => console.log(error));
@@ -30,6 +41,11 @@ const EnrolmentSeason = (props) => {
         if (res.data.result !== null) {
           settingEndTime(res.data.result.end);
           settingStartTime(res.data.result.start);
+        } else if (res.data.success === false) {
+          setLoginStatus(false);
+          setUserData({});
+          toaster.danger("다른 컴퓨터에서 로그인이 되어서 종료됩니다.");
+          props.history.push("/login");
         }
       })
       .catch((error) => console.log(error));
@@ -61,6 +77,13 @@ const EnrolmentSeason = (props) => {
             start: start,
             end: end,
           }).then((res) => {
+            if (res.data.success === false && res.data.msg === "인증 실패!") {
+              setLoginStatus(false);
+              setUserData({});
+              toaster.danger("다른 컴퓨터에서 로그인이 되어서 종료됩니다.");
+              props.history.push("/login");
+            }
+
             toaster.success("기간 변경 성공");
             console.log("제출해봄", res);
             settingStartTime(start);
@@ -81,7 +104,11 @@ const EnrolmentSeason = (props) => {
           </div>
           <div className="semesterWrap">
             학기{" "}
-            <select name="semester" onChange={handleChange}>
+            <select
+              name="semester"
+              value={values.semester}
+              onChange={handleChange}
+            >
               <option value="1">1</option>
               <option value="2">2</option>
             </select>

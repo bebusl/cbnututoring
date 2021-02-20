@@ -15,7 +15,11 @@ const login = (_id, password) => {
 };
 
 const logout = () => {
-  return axios.get("/api/accounts/logout");
+  return axios.get("/api/accounts/logout").then((res) => {
+    window.localStorage.setItem("year", 2021);
+    window.localStorage.setItem("semester", 1);
+    return res;
+  });
 };
 
 export default {

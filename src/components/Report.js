@@ -156,6 +156,7 @@ function Report({ years, history }) {
                 <Table.TextCell>
                   <Button
                     onClick={() => {
+                      console.log("전체 다운로드 : ", data);
                       Axios({
                         url: `/api/reports/downloads`,
                         method: "POST",
@@ -164,6 +165,7 @@ function Report({ years, history }) {
                           year: year,
                           semester: semester,
                           _id: data.tutorNumber,
+                          courseId: data.id,
                         },
                       })
                         .then((res) => {

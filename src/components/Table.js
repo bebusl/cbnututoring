@@ -111,56 +111,57 @@ function Table({
         {dialog.content}
       </Dialog>
       <div className="scroll-page">
-        <TableUI textAlign="center">
-          <TableUI.Head>
-            <TableUI.TextHeaderCell>소속</TableUI.TextHeaderCell>
-            <TableUI.TextHeaderCell flexBasis={50} flexShrink={0} flexGrow={0}>
+        <table>
+          <thead>
+            <tr>
+
+            
+            <th>소속</th>
+            <th>
               학년
-            </TableUI.TextHeaderCell>
-            <TableUI.TextHeaderCell>교과목명</TableUI.TextHeaderCell>
-            <TableUI.TextHeaderCell>담당교수</TableUI.TextHeaderCell>
-            <TableUI.TextHeaderCell>튜터명</TableUI.TextHeaderCell>
-            <TableUI.TextHeaderCell flexBasis={120} flexShrink={0} flexGrow={0}>
+            </th>
+            <th>교과목명</th>
+            <th>담당교수</th>
+            <th>튜터명</th>
+            <th >
               튜터프로필
-            </TableUI.TextHeaderCell>
+            </th>
             {isAllList ? (
               <>
-                <TableUI.TextHeaderCell
-                  flexBasis={50}
-                  flexShrink={0}
-                  flexGrow={0}
+                <th
+                 
                 >
                   신청인원
-                </TableUI.TextHeaderCell>
-                <TableUI.TextHeaderCell
-                  flexBasis={100}
-                  flexShrink={0}
-                  flexGrow={0}
+                </th>
+                <th
+ 
                 >
                   운영계획서
-                </TableUI.TextHeaderCell>
+                </th>
               </>
             ) : undefined}
-            <TableUI.TextHeaderCell flexBasis={200} flexShrink={0} flexGrow={0}>
+            <th>
               {" "}
-            </TableUI.TextHeaderCell>
-          </TableUI.Head>
-          <TableUI.Body height={240}>
+              </th>
+              </tr>
+          </thead>
+          <tbody height={240}>
             {!datas ? (
-              <TableUI.TextCell>내역이 없습니다.</TableUI.TextCell>
+              <tr>
+              <td>내역이 없습니다.</td></tr>
             ) : (
               datas.map((data, index) => (
-                <TableUI.Row key={data.id}>
-                  <TableUI.TextCell>
+                <tr key={data.id}>
+                  <td>
                     {departmentList[data.department]}
-                  </TableUI.TextCell>
-                  <TableUI.TextCell flexBasis={50} flexShrink={0} flexGrow={0}>
+                  </td>
+                  <td >
                     {data.grade}
-                  </TableUI.TextCell>
-                  <TableUI.TextCell>{data.courseName}</TableUI.TextCell>
-                  <TableUI.TextCell>{data.professorName}</TableUI.TextCell>
-                  <TableUI.TextCell>{data.tutorName}</TableUI.TextCell>
-                  <TableUI.TextCell flexBasis={90} flexShrink={0} flexGrow={0}>
+                  </td>
+                  <td>{data.courseName}</td>
+                  <td>{data.professorName}</td>
+                  <td>{data.tutorName}</td>
+                  <td >
                     <Button
                       height={32}
                       onClick={() => {
@@ -188,20 +189,16 @@ function Table({
                     >
                       프로필 보기
                     </Button>
-                  </TableUI.TextCell>
+                  </td>
                   {isAllList ? (
                     <>
-                      <TableUI.TextCell
-                        flexBasis={50}
-                        flexShrink={0}
-                        flexGrow={0}
+                      <td
+                        
                       >
                         {data.appliedCount}
-                      </TableUI.TextCell>
-                      <TableUI.TextCell
-                        flexBasis={100}
-                        flexShrink={0}
-                        flexGrow={0}
+                      </td>
+                      <td
+           
                       >
                         <Button
                           appearance="minimal"
@@ -240,14 +237,12 @@ function Table({
                         >
                           다운로드
                         </Button>
-                      </TableUI.TextCell>
+                      </td>
                     </>
                   ) : undefined}
                   {isAllList ? (
-                    <TableUI.TextCell
-                      flexBasis={200}
-                      flexShrink={0}
-                      flexGrow={0}
+                    <td
+                   
                     >
                       <Button
                         appearance="minimal"
@@ -291,13 +286,11 @@ function Table({
                       >
                         수강신청
                       </Button>
-                    </TableUI.TextCell>
+                    </td>
                   ) : undefined}
                   {isCourseManage ? (
-                    <TableUI.TextCell
-                      flexBasis={250}
-                      flexShrink={0}
-                      flexGrow={0}
+                    <td
+
                     >
                       <Button
                         appearance="minimal"
@@ -395,13 +388,11 @@ function Table({
                       >
                         수강생 목록
                       </Button>
-                    </TableUI.TextCell>
+                    </td>
                   ) : undefined}
                   {isMylist ? (
-                    <TableUI.TextCell
-                      flexBasis={250}
-                      flexShrink={0}
-                      flexGrow={0}
+                    <td
+    
                     >
                       <Button
                         appearance="minimal"
@@ -462,13 +453,10 @@ function Table({
                       >
                         신청취소
                       </Button>
-                    </TableUI.TextCell>
+                    </td>
                   ) : undefined}
                   {isReportReg ? (
-                    <TableUI.TextCell
-                      flexBasis={180}
-                      flexShrink={0}
-                      flexGrow={0}
+                    <td
                     >
                       <Button
                         appearance="minimal"
@@ -490,13 +478,13 @@ function Table({
                       >
                         보고서등록
                       </Button>
-                    </TableUI.TextCell>
+                    </td>
                   ) : undefined}
-                </TableUI.Row>
+                </tr>
               ))
             )}
-          </TableUI.Body>
-        </TableUI>
+          </tbody>
+        </table>
       </div>
     </Pane>
   );

@@ -34,7 +34,8 @@ function useForm({ initialValues, history }) {
     });
     }
     for (const i in values) {
-      if (values[i].length < 1) { toaster.warning("필수 입력사항을 모두 작성해주세요"); return; }
+      console.log("희희",values[i],i);
+      if (values[i].length < 1 && i!="file") { toaster.warning("필수 입력사항을 모두 작성해주세요"); return; }
       sendForm.append(i, values[i]);
     }
 

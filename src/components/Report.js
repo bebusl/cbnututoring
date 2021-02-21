@@ -118,23 +118,27 @@ function Report({ years, history }) {
           <button type="submit">검색</button>
         </div>
       </form>
-      <Table>
-        <Table.Head>
-          <Table.TextHeaderCell>강좌이름</Table.TextHeaderCell>
-          <Table.TextHeaderCell>튜터이름</Table.TextHeaderCell>
+      <div>
+        <table>
+          <thead>
+            <tr>
+          <th>강좌이름</th>
+          <th>튜터이름</th>
           {week.map((data) => (
-            <Table.TextHeaderCell key={data}>{data}주차</Table.TextHeaderCell>
+            <th key={data}>{data}주차</th>
           ))}
-          <Table.TextHeaderCell>다운로드</Table.TextHeaderCell>
-        </Table.Head>
-        <Table.Body>
+            <th>다운로드</th>
+            </tr>
+            </thead>
+    
+        <tbody>
           {datas &&
             datas.map((data) => (
-              <Table.Row key={data.id}>
-                <Table.TextCell>{data.courseName}</Table.TextCell>
-                <Table.TextCell>{data.tutorName}</Table.TextCell>
+              <tr key={data.id}>
+                <td>{data.courseName}</td>
+                <td>{data.tutorName}</td>
                 {week.map((date) => (
-                  <Table.TextCell key={(data.id, "-", date)}>
+                  <td key={(data.id, "-", date)}>
                     {data.reports.some((e) => e.week === date) ? (
                       <Button
                         onClick={() =>
@@ -151,9 +155,9 @@ function Report({ years, history }) {
                     ) : (
                       "X"
                     )}
-                  </Table.TextCell>
+                  </td>
                 ))}
-                <Table.TextCell>
+                <td>
                   <Button
                     onClick={() => {
                       console.log("전체 다운로드 : ", data);
@@ -191,13 +195,14 @@ function Report({ years, history }) {
                   >
                     다운로드
                   </Button>
-                </Table.TextCell>
-              </Table.Row>
+                </td>
+              </tr>
             ))}
-          <Table.Row>
+          <tr>
+            <td></td><td></td>
             {week.map((sweek) => {
               return (
-                <Table.TextCell>
+                <td>
                   <Button
                     onClick={(e) => {
                       e.preventDefault();
@@ -235,13 +240,14 @@ function Report({ years, history }) {
                   >
                     다운
                   </Button>
-                </Table.TextCell>
+                </td>
               );
             })}
-          </Table.Row>
-        </Table.Body>
-      </Table>
-      <form
+          </tr>
+          </tbody>
+          </table>
+      </div>
+      {/* <form
         onSubmit={(e) => {
           e.preventDefault();
           console.log("보내는데이터", selectWeek, year, semester);
@@ -286,7 +292,7 @@ function Report({ years, history }) {
         <Button type="submit" marginY={8} marginLeft="1rem">
           보고서 다운로드
         </Button>
-      </form>
+      </form> */}
     </div>
   );
 }

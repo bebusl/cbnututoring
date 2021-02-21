@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { UserData } from "../App";
+import { UserData, IsLogin } from "../App";
 import { TextInputField, Button, toaster, Select } from "evergreen-ui";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import User from "../services/user.service";
@@ -10,8 +10,9 @@ const department = ["컴퓨터공학과", "소프트웨어학과", "정보통신
 const week = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 const year = [2021, 2022, 2023, 2024, 2025, 2026];
 
-const Enrolment = ({ onSubmit, data }) => {
-  const { userData } = useContext(UserData);
+const Enrolment = ({ onSubmit, data, history }) => {
+  const { userData, setUserData } = useContext(UserData);
+  const { loginStatus, setLoginStatus } = useContext(IsLogin);
   console.log("Enrolment : ", userData, data);
   const onenrolmentSubmit = () => {
     User.regCourse(data.id)
@@ -21,6 +22,14 @@ const Enrolment = ({ onSubmit, data }) => {
             duration: 3,
           });
           window.location.reload(false);
+        } else if (
+          res.data.success === false &&
+          res.data.msg === "인증 실패!"
+        ) {
+          setLoginStatus(false);
+          setUserData({});
+          toaster.danger("다른 컴퓨터에서 로그인이 되어서 종료됩니다.");
+          history.push("/login");
         } else {
           toaster.danger("코스 등록에 실패했습니다.", {
             duration: 5,
@@ -61,7 +70,9 @@ const Enrolment = ({ onSubmit, data }) => {
   );
 };
 
-const CourseModify = ({ onSubmit, data }) => {
+const CourseModify = ({ onSubmit, data, history }) => {
+  const { userData, setUserData } = useContext(UserData);
+  const { loginStatus, setLoginStatus } = useContext(IsLogin);
   const [values, setValues] = useState({
     year: data.year,
     semester: data.semester,
@@ -109,8 +120,16 @@ const CourseModify = ({ onSubmit, data }) => {
             duration: 3,
           });
           window.location.reload(false);
+        } else if (
+          res.data.success === false &&
+          res.data.msg === "인증 실패!"
+        ) {
+          setLoginStatus(false);
+          setUserData({});
+          toaster.danger("다른 컴퓨터에서 로그인이 되어서 종료됩니다.");
+          history.push("/login");
         } else {
-          toaster.danger("코스 수정에 실패했습니다.", {
+          toaster.danger("코스 수정에 실패했습니다." + res.data.msg, {
             duration: 3,
           });
         }
@@ -254,27 +273,19 @@ const CourseModify = ({ onSubmit, data }) => {
   );
 };
 
-const ReportReg = ({ onSubmit, data }) => {
-  const [values, setValues] = useState({
-    file: "",
-    week: 1,
-  });
-
-  const handleChange = (e) => {
-    setValues({ ...values, week: e.target.value });
-  };
+const ReportRegister = ({ onSubmit, courseId, week }) => {
+  const [file, setFile] = useState();
 
   const handleFileChange = (e) => {
-    setValues({ ...values, file: e.target.files[0] });
+    setFile(e.target.files[0]);
   };
 
-  const onreportSubmit = (e) => {
+  const onReportSubmit = () => {
+    console.log("HIHI", week, courseId, file);
     const sendForm = new FormData();
-    sendForm.append("file", values.file);
-    sendForm.append("week", values.week);
-    sendForm.append("courseId", data);
-
-    e.preventDefault();
+    sendForm.append("file", file);
+    sendForm.append("week", week);
+    sendForm.append("courseId", courseId);
     User.reportUpload(sendForm)
       .then((res) => {
         if (res.data.success === true) {
@@ -283,7 +294,9 @@ const ReportReg = ({ onSubmit, data }) => {
             duration: 3,
           });
           onSubmit();
+          //search(); 그냥 무조건 다이얼로그 끄면 search함수 실행되도록 해뒀음.
         } else {
+          console.log("보고서 음슴");
           toaster.danger("보고서 등록에 실패했습니다." + res.data.success, {
             duration: 3,
           });
@@ -297,51 +310,34 @@ const ReportReg = ({ onSubmit, data }) => {
   };
   return (
     <div>
-      <form onSubmit={onreportSubmit}>
-        <label htmlFor="reportWeek">기간</label>
-        <select name="reportWeek" onChange={handleChange}>
-          {week.map((data, idx) => {
-            return (
-              <option value={data} key={idx}>
-                {data}주차
-              </option>
-            );
-          })}
-        </select>
-        <label htmlFor="file">보고서</label>
-        <input
-          type="file"
-          name="file"
-          accept=".pdf,.hwp"
-          onChange={handleFileChange}
-        />
-        <div>
-          <Button
-            intent="danger"
-            onClick={(e) => {
-              e.preventDefault();
-              onSubmit();
-            }}
-          >
-            취소
-          </Button>
-          <Button type="submit">제출</Button>
-        </div>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          onReportSubmit();
+        }}
+      >
+        <input type="file" name="file" onInput={handleFileChange} />
+        <Button type="submit">제출</Button>
       </form>
     </div>
   );
 };
-/*user정보는 context에서 들고옴. 그 외에 정보는 props로 전달 받음 user정보에 있는건 바로 출력되도록 하기*/
 
-const StudentList = ({ onSubmit, data, year, semester }) => {
+const StudentList = ({ onSubmit, data, year, semester, history }) => {
   const [infos, setInfo] = useState([]);
-
+  const { userData, setUserData } = useContext(UserData);
+  const { loginStatus, setLoginStatus } = useContext(IsLogin);
   useEffect(() => {
     console.log("courseID", data);
     Axios.post("/api/registration/get", { courseId: data.id })
       .then((res) => {
         console.log(res);
-        if (infos !== res.data.result) {
+        if (res.data.success === false && res.data.msg === "인증 실패!") {
+          setLoginStatus(false);
+          setUserData({});
+          toaster.danger("다른 컴퓨터에서 로그인이 되어서 종료됩니다.");
+          history.push("/login");
+        } else if (infos !== res.data.result) {
           setInfo(res.data.result);
         }
       })
@@ -396,4 +392,4 @@ const StudentList = ({ onSubmit, data, year, semester }) => {
   );
 };
 
-export default { Enrolment, CourseModify, ReportReg, StudentList };
+export default { Enrolment, CourseModify, ReportRegister, StudentList };

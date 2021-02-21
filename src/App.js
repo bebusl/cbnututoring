@@ -1,5 +1,5 @@
 import React, { useState, createContext, useEffect } from "react";
-import { Switch, Route, Link, Redirect } from "react-router-dom";
+import { Switch, Route, Link, Redirect, useHistory} from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Button } from "evergreen-ui";
 import "./App.css";
@@ -59,11 +59,11 @@ const adminNav = [
     to: "/coursemanage",
     component: (props) => <CourseManage years={years} {...props} />,
   },
-  {
-    title: "수강신청 기간 설정",
-    to: "/enrolmentseason",
-    component: (props) => <EnrolmentSeason years={years} {...props} />,
-  },
+  // {
+  //   title: "수강신청 기간 설정",
+  //   to: "/enrolmentseason",
+  //   component: (props) => <EnrolmentSeason years={years} {...props} />,
+  // },
   {
     title: "보고서 관리",
     to: "/report",
@@ -77,6 +77,8 @@ const App = (props) => {
     name: "name",
   });
   const [hasRequired, setHasRequired] = useState(false);
+  const history=useHistory();
+
 
   const handleChangeUserData = (newData) => {
     setUserData((state) => {
@@ -88,6 +90,7 @@ const App = (props) => {
     axios
       .get("/api/accounts/auth")
       .then((res) => {
+        console.log("어쓰 성공여부",res);
         if (res.data.success) {
           setLoginStatus(true);
           handleChangeUserData(res.data.account);
@@ -99,15 +102,13 @@ const App = (props) => {
       .catch((err) => console.log("로그인 에러", err));
   }, [loginStatus]);
 
-  useEffect(() => {
-    axios
-      .get("/api/systems")
-      .then((res) => console.log(res))
-      .catch((error) => console.log(error));
-  }, []);
 
-  const logOut = async () => {
-    await AuthService.logout().then((res) => console.log(res));
+  const logOut =() => {
+    AuthService.logout().then((res) => {if(res.data.success==true){
+          setLoginStatus(false);
+          handleChangeUserData({});
+          history.push("/login");}
+    }).catch(e=>console.log("로그아웃에러",e));
   };
 
   return (
@@ -136,7 +137,7 @@ const App = (props) => {
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <a href="/login" className="nav-link" onClick={logOut}>
+                  <a href="/login" className="nav-link" onClick={(e)=>{e.preventDefault();logOut();}}>
                     로그아웃
                   </a>
                 </li>

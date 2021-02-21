@@ -184,23 +184,25 @@ function ReportReg({ years, history }) {
       >
         {dialog.content}
       </Dialog>
-      <Table>
-        <Table.Head>
-          <Table.TextHeaderCell>강좌이름</Table.TextHeaderCell>
-          <Table.TextHeaderCell>튜터이름</Table.TextHeaderCell>
+      <table>
+        <thead>
+          <tr>
+          <th>강좌이름</th>
+          <th>튜터이름</th>
           {week.map((data) => (
-            <Table.TextHeaderCell key={data}>{data}주차</Table.TextHeaderCell>
+            <th key={data}>{data}주차</th>
           ))}
-        </Table.Head>
-        <Table.Body>
+            </tr>
+        </thead>
+        <tbody>
           {tutoringList &&
             tutoringList.map((data, idx) => {
               return (
-                <Table.Row key={idx}>
-                  <Table.TextCell>{data.courseName}</Table.TextCell>
-                  <Table.TextCell>{data.tutorName}</Table.TextCell>
+                <tr key={idx}>
+                  <td>{data.courseName}</td>
+                  <td>{data.tutorName}</td>
                   {week.map((date) => (
-                    <Table.TextCell key={(data.id, "-", date)}>
+                    <td key={(data.id, "-", date)}>
                       {data.reports.some((report) => report.week === date) ? (
                         <Button
                           onClick={(e) => {
@@ -230,7 +232,7 @@ function ReportReg({ years, history }) {
                           X
                         </Button>
                       )}
-                    </Table.TextCell>
+                    </td>
                   ))}
                   {/* {week.map((eachWeek, idx) => (
                     <Table.TextCell key={idx}>
@@ -252,12 +254,12 @@ function ReportReg({ years, history }) {
                       </Button>
                     </Table.TextCell>
                   ))} */}
-                </Table.Row>
+                </tr>
               );
             })}
-          <Table.Row></Table.Row>
-        </Table.Body>
-      </Table>
+
+        </tbody>
+      </table>
       {/* <Table.Head>
           <Table.TextHeaderCell>강좌이름</Table.TextHeaderCell>
           <Table.TextHeaderCell>튜터이름</Table.TextHeaderCell>

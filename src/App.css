@@ -229,3 +229,29 @@ textarea {
 .small-size {
   font-size: 0.8em;
 }
+
+thead {
+  color: rgb(66, 90, 112);
+  font-size: 0.9rem;
+  font-weight: 900;
+  background-color: rgb(245, 246, 247);
+  border: none;
+  border-bottom: 1px solid rgb(228, 231, 235);
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
+
+table {
+  border: none;
+  border-top: 1px solid rgb(228, 231, 235);
+  border-bottom: 1px solid rgb(228, 231, 235);
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+
+tbody {
+  color: rgb(66, 90, 112);
+
+  font-size: 0.8rem;
+}

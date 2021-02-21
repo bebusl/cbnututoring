@@ -29,7 +29,7 @@ function Table({
   const { userData, setUserData } = useContext(UserData);
   const { loginStatus, setLoginStatus } = useContext(IsLogin);
   const [mylistData, setmylistdata] = useState();
-  const [accessSeason, setAccessSeason] = useState(true);
+  //const [accessSeason, setAccessSeason] = useState(true);
   const [isShown, setIsShown] = useState(false);
   const [dialog, setDialog] = useState({
     title: "",
@@ -39,25 +39,28 @@ function Table({
   });
   const history = useHistory();
 
-  useEffect(() => {
-    Axios.get(`/api/systems/find/1/${year}/${semester}`)
-      .then((res) => {
-        if (res.data.success === false && res.data.msg === "인증 실패!") {
-          setLoginStatus(false);
-          setUserData({});
-          toaster.danger("다른 컴퓨터에서 로그인이 되어서 종료됩니다.");
-          history.push("/login");
-        }
-        if (
-          res.data.result.start > Date.now() ||
-          Date.now() > res.data.result.end
-        ) {
-          setAccessSeason(false);
-        }
-        console.log(res.data.result.start, res.data.result.end, Date.now());
-      })
-      .catch((error) => console.log(error));
-  }, [year, semester]);
+  // useEffect(() => {
+  //   Axios.get(`/api/systems/find/1/${year}/${semester}`)
+  //     .then((res) => {
+  //       if (res.data.success === false && res.data.msg === "인증 실패!") {
+  //         setLoginStatus(false);
+  //         setUserData({});
+  //         toaster.danger("다른 컴퓨터에서 로그인이 되어서 종료됩니다.");
+  //         history.push("/login");
+  //       }
+  //       if (
+  //         res.data.result.start > Date.now() ||
+  //         Date.now() > res.data.result.end
+  //       ) {
+  //         setAccessSeason(false);
+  //       }
+  //       console.log(res.data.result.start, res.data.result.end, Date.now());
+  //     })
+  //     .catch((error) => console.log(error));
+  // }, [year, semester]);//enrolment season반영 빼기
+
+
+
   useEffect(() => {
     //push
 
@@ -92,9 +95,9 @@ function Table({
 
   return (
     <Pane>
-      {isAllList && !accessSeason && (
+      {/* {isAllList && !accessSeason && (
         <Alert intent="warning" title="수강신청 기간이 아닙니다."></Alert>
-      )}
+      )} */}
       <Dialog
         isShown={isShown}
         title={dialog.title}
@@ -249,7 +252,7 @@ function Table({
                       <Button
                         appearance="minimal"
                         disabled={
-                          !accessSeason ||
+                          
                           data.tutorNumber === userData._id ||
                           (mylistData &&
                             mylistData.some((e) => e.id === data.id))

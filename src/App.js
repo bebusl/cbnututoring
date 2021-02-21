@@ -59,11 +59,11 @@ const adminNav = [
     to: "/coursemanage",
     component: (props) => <CourseManage years={years} {...props} />,
   },
-  {
-    title: "수강신청 기간 설정",
-    to: "/enrolmentseason",
-    component: (props) => <EnrolmentSeason years={years} {...props} />,
-  },
+  // {
+  //   title: "수강신청 기간 설정",
+  //   to: "/enrolmentseason",
+  //   component: (props) => <EnrolmentSeason years={years} {...props} />,
+  // },
   {
     title: "보고서 관리",
     to: "/report",

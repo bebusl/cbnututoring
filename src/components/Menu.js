@@ -31,11 +31,11 @@ function Menu(props) {
       to: "/coursemanage",
       component: <div>강좌 관리</div>,
     },
-    {
-      title: "수강신청 기간 설정",
-      to: "/enrolmentseason",
-      component: <div>수강신청 기간 설정</div>,
-    },
+    // {
+    //   title: "수강신청 기간 설정",
+    //   to: "/enrolmentseason",
+    //   component: <div>수강신청 기간 설정</div>,
+    // },
     { title: "보고서 관리", to: "/report", component: <div>보고서 관리</div> },
   ];
 

@@ -41,7 +41,7 @@ const EnrolmentSeason = (props) => {
         if (res.data.result !== null) {
           settingEndTime(res.data.result.end);
           settingStartTime(res.data.result.start);
-        } else if (res.data.success === false) {
+        } else if (res.data.success === false && res.data.msg === "인증 실패!") {
           setLoginStatus(false);
           setUserData({});
           toaster.danger("다른 컴퓨터에서 로그인이 되어서 종료됩니다.");

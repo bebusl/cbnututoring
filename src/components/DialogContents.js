@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { UserData, IsLogin } from "../App";
-import { TextInputField, Button, toaster, Select } from "evergreen-ui";
+import { TextInputField, Button, toaster, Select, Pane } from "evergreen-ui";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import User from "../services/user.service";
 import Axios from "axios";
@@ -281,7 +281,6 @@ const ReportRegister = ({ onSubmit, courseId, week }) => {
   };
 
   const onReportSubmit = () => {
-    console.log("HIHI", week, courseId, file);
     const sendForm = new FormData();
     sendForm.append("file", file);
     sendForm.append("week", week);
@@ -316,8 +315,23 @@ const ReportRegister = ({ onSubmit, courseId, week }) => {
           onReportSubmit();
         }}
       >
-        <input type="file" name="file" onInput={handleFileChange} />
-        <Button type="submit">제출</Button>
+        <div>
+          <input type="file" name="file" onInput={handleFileChange} />
+        </div>
+        <Pane display="flex" justifyContent="flex-end">
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              onSubmit();
+            }}
+            appearance="minimal"
+          >
+            취소
+          </Button>
+          <Button appearance="minimal" intent="success" type="submit">
+            제출
+          </Button>
+        </Pane>
       </form>
     </div>
   );

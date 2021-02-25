@@ -74,12 +74,11 @@ function ReportReg({ years, history }) {
   };
 
   const reportRegister = (data, date) => {
-    console.log("왜 세팅이 안돼..?", data, date);
     setDialog(
       {
         ...dialog,
         title: `${data.courseName} ${date}주차 보고서 제출`,
-        hasFooter: true,
+        hasFooter: false,
         confirmLabel: "완료",
         content: (
           <ReportRegister.ReportRegister
@@ -187,12 +186,12 @@ function ReportReg({ years, history }) {
       <table>
         <thead>
           <tr>
-          <th>강좌이름</th>
-          <th>튜터이름</th>
-          {week.map((data) => (
-            <th key={data}>{data}주차</th>
-          ))}
-            </tr>
+            <th>강좌이름</th>
+            <th>튜터이름</th>
+            {week.map((data) => (
+              <th key={data}>{data}주차</th>
+            ))}
+          </tr>
         </thead>
         <tbody>
           {tutoringList &&
@@ -205,6 +204,7 @@ function ReportReg({ years, history }) {
                     <td key={(data.id, "-", date)}>
                       {data.reports.some((report) => report.week === date) ? (
                         <Button
+                          appearance="minimal"
                           onClick={(e) => {
                             e.preventDefault();
                             reportModify(data, date); //data.fileName=> 파일 이름.
@@ -214,6 +214,7 @@ function ReportReg({ years, history }) {
                         </Button>
                       ) : (
                         <Button
+                          appearance="minimal"
                           onClick={(e) => {
                             e.preventDefault();
                             reportRegister(data, date);
@@ -257,7 +258,6 @@ function ReportReg({ years, history }) {
                 </tr>
               );
             })}
-
         </tbody>
       </table>
       {/* <Table.Head>

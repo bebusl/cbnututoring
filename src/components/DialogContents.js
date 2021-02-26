@@ -273,18 +273,28 @@ const CourseModify = ({ onSubmit, data, history }) => {
   );
 };
 
-const ReportRegister = ({ onSubmit, courseId, week }) => {
+const ReportRegister = ({ onSubmit, courseId, week, modify = false }) => {
   const [file, setFile] = useState();
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
 
-  const onReportSubmit = () => {
-    const sendForm = new FormData();
-    sendForm.append("file", file);
-    sendForm.append("week", week);
-    sendForm.append("courseId", courseId);
+  const reportModify = (sendForm) => {
+    User.reportModify(sendForm)
+      .then((res) => {
+        console.log("레포트 수정 : ", res);
+        if (res.data.success === true) {
+          toaster.success("보고서 수정을 성공했습니다.", { duration: 3 });
+          onSubmit();
+        } else {
+          toaster.danger("보고서 수정에 실패했습니다.", +res.data.msg);
+        }
+      })
+      .catch((err) => toaster.danger("보고서 수정을 실패했습니다." + err));
+  };
+
+  const reportUpload = (sendForm) => {
     User.reportUpload(sendForm)
       .then((res) => {
         if (res.data.success === true) {
@@ -306,6 +316,15 @@ const ReportRegister = ({ onSubmit, courseId, week }) => {
           duration: 3,
         });
       });
+  };
+
+  const onReportSubmit = () => {
+    const sendForm = new FormData();
+    sendForm.append("file", file);
+    sendForm.append("week", week);
+    sendForm.append("courseId", courseId);
+    if (modify === false) reportUpload(sendForm);
+    else reportModify(sendForm);
   };
   return (
     <div>

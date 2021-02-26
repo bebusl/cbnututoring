@@ -61,6 +61,17 @@ const reportUpload = (sendForm) => {
   });
 };
 
+const reportModify = (sendForm) => {
+  return axios({
+    url: "/api/reports/modify",
+    method: "POST",
+    data: sendForm,
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
+
 const getReports = () => {
   axios
     .get("/api/" + "/reports/")
@@ -76,6 +87,7 @@ export default {
   cancleRegCourse,
   regCourse,
   reportUpload,
+  reportModify,
   getReports,
   courseModify,
 };

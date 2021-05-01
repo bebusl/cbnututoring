@@ -388,6 +388,7 @@ const StudentList = ({ onSubmit, data, year, semester, history }) => {
                   <td>{department[info.department]}</td>
                   <td>{info.name}</td>
                   <td>{info.email}</td>
+                  <td>❌</td>
                 </tr>
               ))}
           </tbody>

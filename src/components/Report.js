@@ -28,7 +28,7 @@ function Report({ years, history }) {
     }
   };
 
-  const reportDown = (date, data) => {
+  const reportDown = (data) => {
     console.log(data.fileId);
     Axios({
       url: `/api/reports/download`,
@@ -144,7 +144,6 @@ function Report({ years, history }) {
                         <Button
                           onClick={() =>
                             reportDown(
-                              date,
                               data.reports.find(
                                 (element) => element.week === date
                               )
@@ -161,7 +160,6 @@ function Report({ years, history }) {
                   <td>
                     <Button
                       onClick={() => {
-                        console.log("전체 다운로드 : ", data);
                         Axios({
                           url: `/api/reports/downloads`,
                           method: "POST",
@@ -186,10 +184,21 @@ function Report({ years, history }) {
                               history.push("/login");
                             }
                             console.log("집파일 맞나유~", res);
-                            fileDownload(
-                              res.data,
-                              `${decodeURIComponent(res.headers["file-name"])}`
+                            const url = window.URL.createObjectURL(
+                              new Blob([res.data])
                             );
+                            const link = document.createElement("a");
+                            link.href = url;
+                            link.setAttribute(
+                              "download",
+                              `${decodeURIComponent(res.headers["file-name"])}`
+                            ); //or any other extension
+                            document.body.appendChild(link);
+                            link.click();
+                            // fileDownload(
+                            //   res.data,
+                            //   `${decodeURIComponent(res.headers["file-name"])}`
+                            // );
                           })
                           .catch((err) =>
                             toaster.warning("다운로드 실패" + err)
@@ -233,10 +242,17 @@ function Report({ years, history }) {
                               );
                               history.push("/login");
                             }
-                            fileDownload(
-                              res.data,
-                              `${decodeURIComponent(res.headers["file-name"])}`
+                            const url = window.URL.createObjectURL(
+                              new Blob([res.data])
                             );
+                            const link = document.createElement("a");
+                            link.href = url;
+                            link.setAttribute(
+                              "download",
+                              `${decodeURIComponent(res.headers["file-name"])}`
+                            ); //or any other extension
+                            document.body.appendChild(link);
+                            link.click();
                           })
                           .catch((err) =>
                             toaster.warning("다운로드 실패" + err)

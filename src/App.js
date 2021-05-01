@@ -18,7 +18,7 @@ import User from "./components/User";
 import Report from "./components/Report";
 import ForgotPassword from "./components/ForgotPassword";
 import ReportReg from "./components/ReportReg";
-
+import AttendeeAdmin from "./components/AttendeeAdmin";
 export const IsLogin = createContext();
 export const UserData = createContext();
 export const HasRequired = createContext();
@@ -58,6 +58,11 @@ const adminNav = [
     title: "강좌 관리",
     to: "/coursemanage",
     component: (props) => <CourseManage years={years} {...props} />,
+  },
+  {
+    title: "수강생 관리",
+    to: "/attendee-admin/:year/:semester/:courseId",
+    component: (props) => <AttendeeAdmin {...props}></AttendeeAdmin>,
   },
   // {
   //   title: "수강신청 기간 설정",
@@ -167,14 +172,6 @@ const App = (props) => {
               </div>
             )}
           </nav>
-          <div className="selectMenu">
-            <button>
-              <Link to="/tutor/student/alllist">학부생 튜터링</Link>
-            </button>
-            <button>
-              <Link to="/ta/student/alllist">TA</Link>
-            </button>
-          </div>
 
           <div className="container">
             <Switch>
@@ -185,7 +182,6 @@ const App = (props) => {
               <Route exact path="/register" component={Register} />
               <Route exact path="/user" component={User} />
               <Route exact path="/forgotpassword" component={ForgotPassword} />
-
               {loginStatus &&
                 studentNav.map((url, idx) => {
                   return (

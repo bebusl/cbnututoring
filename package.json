@@ -48,5 +48,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://swtutor.cbnu.ac.kr"
+  "proxy": "http://localhost:5000"
 }

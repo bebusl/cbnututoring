@@ -13,6 +13,8 @@ import {
 import DialogContents from "./DialogContents";
 import User from "../services/user.service";
 import Axios from "axios";
+import { Link } from "react-router-dom";
+
 const fileDownload = require("js-file-download");
 
 const departmentList = ["컴퓨터공학과", "소프트웨어", "정보통신", "로봇"];
@@ -58,8 +60,6 @@ function Table({
   //     })
   //     .catch((error) => console.log(error));
   // }, [year, semester]);//enrolment season반영 빼기
-
-
 
   useEffect(() => {
     //push
@@ -114,54 +114,35 @@ function Table({
         <table>
           <thead>
             <tr>
-
-            
-            <th>소속</th>
-            <th>
-              학년
-            </th>
-            <th>교과목명</th>
-            <th>담당교수</th>
-            <th>튜터명</th>
-            <th >
-              튜터프로필
-            </th>
-            {isAllList ? (
-              <>
-                <th
-                 
-                >
-                  신청인원
-                </th>
-                <th
- 
-                >
-                  운영계획서
-                </th>
-              </>
-            ) : undefined}
-            <th>
-              {" "}
-              </th>
-              </tr>
+              <th>소속</th>
+              <th>학년</th>
+              <th>교과목명</th>
+              <th>담당교수</th>
+              <th>튜터명</th>
+              <th>튜터프로필</th>
+              {isAllList ? (
+                <>
+                  <th>신청인원</th>
+                  <th>운영계획서</th>
+                </>
+              ) : undefined}
+              <th> </th>
+            </tr>
           </thead>
           <tbody height={240}>
             {!datas ? (
               <tr>
-              <td>내역이 없습니다.</td></tr>
+                <td>내역이 없습니다.</td>
+              </tr>
             ) : (
               datas.map((data, index) => (
                 <tr key={data.id}>
-                  <td>
-                    {departmentList[data.department]}
-                  </td>
-                  <td >
-                    {data.grade}
-                  </td>
+                  <td>{departmentList[data.department]}</td>
+                  <td>{data.grade}</td>
                   <td>{data.courseName}</td>
                   <td>{data.professorName}</td>
                   <td>{data.tutorName}</td>
-                  <td >
+                  <td>
                     <Button
                       height={32}
                       onClick={() => {
@@ -192,14 +173,8 @@ function Table({
                   </td>
                   {isAllList ? (
                     <>
-                      <td
-                        
-                      >
-                        {data.appliedCount}
-                      </td>
-                      <td
-           
-                      >
+                      <td>{data.appliedCount}</td>
+                      <td>
                         <Button
                           appearance="minimal"
                           onClick={() => {
@@ -241,13 +216,10 @@ function Table({
                     </>
                   ) : undefined}
                   {isAllList ? (
-                    <td
-                   
-                    >
+                    <td>
                       <Button
                         appearance="minimal"
                         disabled={
-                          
                           data.tutorNumber === userData._id ||
                           (mylistData &&
                             mylistData.some((e) => e.id === data.id))
@@ -289,9 +261,7 @@ function Table({
                     </td>
                   ) : undefined}
                   {isCourseManage ? (
-                    <td
-
-                    >
+                    <td>
                       <Button
                         appearance="minimal"
                         onClick={() => {
@@ -367,33 +337,50 @@ function Table({
                       >
                         삭제
                       </Button>
-                      <Button
+
+                      {data.appliedCount > 0 ? (
+                        <Link
+                          className="css-1ii3p2c ub-fnt-fam_b77syt ub-mt_0px ub-fnt-sze_12px ub-f-wght_500 ub-ln-ht_32px ub-ltr-spc_0 ub-btrr_3px ub-bbrr_3px ub-btlr_3px ub-bblr_3px ub-pt_0px ub-pb_0px ub-pr_16px ub-pl_16px ub-ml_0px ub-mr_0px ub-mb_0px ub-h_32px ub-pst_relative ub-dspl_inline-flex ub-algn-itms_center ub-flx-wrap_nowrap ub-box-szg_border-box"
+                          to={{
+                            pathname: `/tutor/admin/attendee-admin/${year}/${semester}/${data.id}`,
+                            state: {
+                              data,
+                            },
+                          }}
+                        >
+                          수강생 목록
+                        </Link>
+                      ) : (
+                        <Button disabled={true} appearnace="minimal">
+                          수강생 목록
+                        </Button>
+                      )}
+
+                      {/* <Button
                         appearance="minimal"
                         disabled={data.appliedCount > 0 ? false : true}
                         onClick={() => {
-                          handleDialog({
-                            title: "수강생 목록 확인",
-                            confirmLabel: "나가기",
-                            content: (
-                              <DialogContents.StudentList
-                                data={data}
-                                year={year}
-                                semester={semester}
-                                onSubmit={setIsShownFalse}
-                              />
-                            ),
-                          });
-                          setIsShown(true);
+                          // handleDialog({
+                          //   title: "수강생 목록 확인",
+                          //   confirmLabel: "나가기",
+                          //   content: (
+                          //     <DialogContents.StudentList
+                          //       data={data}
+                          //       year={year}
+                          //       semester={semester}
+                          //       onSubmit={setIsShownFalse}
+                          //     />
+                          //   ),
+                          // });
+                          // setIsShown(true);
                         }}
                       >
                         수강생 목록
-                      </Button>
+                      </Button> */}
                     </td>
                   ) : undefined}
                   {isMylist ? (
-                    <td
-    
-                    >
+                    <td>
                       <Button
                         appearance="minimal"
                         onClick={() => {
@@ -456,8 +443,7 @@ function Table({
                     </td>
                   ) : undefined}
                   {isReportReg ? (
-                    <td
-                    >
+                    <td>
                       <Button
                         appearance="minimal"
                         onClick={() => {

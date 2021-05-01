@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
-import AuthService from "../services/auth.service";
+import AuthService from "../pastservices/auth.service";
 import { toaster } from "evergreen-ui";
 import { isEmail } from "validator";
 
@@ -175,6 +175,14 @@ const Register = (props) => {
                 validations={[required, validPassword]}
               />
             </div>
+            {values.checkPassword !== values.password ? (
+              <>
+                <div className="alert alert-danger" role="alert">
+                  비밀번호가 일치하지 않습니다.
+                </div>
+              </>
+            ) : null}
+
             <div className="form-group">
               <label htmlFor="name">이름</label>
               <Input

@@ -26,20 +26,20 @@ function useForm({ initialValues, history }) {
     event.preventDefault();
     const sendForm = new FormData();
 
-
-    if (values.profile.length > 0) { 
+    if (values.profile.length > 0) {
       setValues({
-      ...values,
-      ["profile"]: values.profile.replace("\n/g", "<br>"),
-    });
+        ...values,
+        ["profile"]: values.profile.replace("\n/g", "<br>"),
+      });
     }
     for (const i in values) {
-      console.log("희희",values[i],i);
-      if (values[i].length < 1 && i!="file") { toaster.warning("필수 입력사항을 모두 작성해주세요"); return; }
+      console.log("희희", values[i], i);
+      if (i !== "file" && values[i].length < 1) {
+        toaster.warning("필수 입력사항을 모두 작성해주세요");
+        return;
+      }
       sendForm.append(i, values[i]);
     }
-
-
 
     await axios({
       url: "/api/courses/register",
@@ -53,7 +53,10 @@ function useForm({ initialValues, history }) {
         if (response.data.success === true) {
           toaster.success("강좌 등록을 성공했습니다.");
           history.push("/tutor/admin/coursemanage");
-        } else if (response.data.success === false && response.data.msg === "인증 실패!") {
+        } else if (
+          response.data.success === false &&
+          response.data.msg === "인증 실패!"
+        ) {
           setLoginStatus(false);
           setUserData({});
           toaster.danger("다른 컴퓨터에서 로그인이 되어서 종료됩니다.");
@@ -76,19 +79,19 @@ function useForm({ initialValues, history }) {
 }
 
 export default function CourseReg({ years, history }) {
-  const { handleChange, handleSubmit, handleFileChange,values } = useForm({
+  const { handleChange, handleSubmit, handleFileChange, values } = useForm({
     initialValues: {
       year: window.localStorage.getItem("year"),
       semester: window.localStorage.getItem("semester"),
       department: "0",
       grade: "1",
       courseName: "",
-      professorName:"",
+      professorName: "",
       tutorName: "",
       tutorNumber: "",
       limit: 0,
       file: "",
-      profile:""
+      profile: "",
     },
     history,
   });
@@ -102,11 +105,14 @@ export default function CourseReg({ years, history }) {
       >
         <ul>
           <li>
-            <p className="red small-size">빨간색으로 표시되는 필드를 꼭 입력한 후 제출해주세요.(운영계획서는 선택사항)</p>
+            <p className="red small-size">
+              빨간색으로 표시되는 필드를 꼭 입력한 후 제출해주세요.(운영계획서는
+              선택사항)
+            </p>
           </li>
           <li>
             <label htmlFor="year">년도</label>
-            <select name="year" value={values.year}onChange={handleChange}>
+            <select name="year" value={values.year} onChange={handleChange}>
               {years.map((year) => (
                 <option value={year} key={year}>
                   {year}
@@ -117,7 +123,11 @@ export default function CourseReg({ years, history }) {
           <li>
             <label htmlFor="semester">학기</label>
 
-            <select name="semester" value={values.semester} onChange={handleChange}>
+            <select
+              name="semester"
+              value={values.semester}
+              onChange={handleChange}
+            >
               <option value="1">1</option>
               <option value="2">2</option>
             </select>
@@ -148,7 +158,9 @@ export default function CourseReg({ years, history }) {
               type="text"
               name="courseName"
               onChange={handleChange}
-              className={ values.courseName.length<1? "border-color-red":null}
+              className={
+                values.courseName.length < 1 ? "border-color-red" : null
+              }
             ></input>
           </li>
 
@@ -159,15 +171,22 @@ export default function CourseReg({ years, history }) {
               type="text"
               name="professorName"
               onChange={handleChange}
-              className={ values.professorName.length<1? "border-color-red":null}
-
+              className={
+                values.professorName.length < 1 ? "border-color-red" : null
+              }
             ></input>
           </li>
           <li>
             <label htmlFor="tutorName">튜터이름</label>
 
-            <input type="text" name="tutorName" onChange={handleChange}               className={ values.tutorName.length<1? "border-color-red":null}
-></input>
+            <input
+              type="text"
+              name="tutorName"
+              onChange={handleChange}
+              className={
+                values.tutorName.length < 1 ? "border-color-red" : null
+              }
+            ></input>
           </li>
           <li>
             <label htmlFor="tutorNumber">튜터학번</label>
@@ -176,14 +195,19 @@ export default function CourseReg({ years, history }) {
               type="text"
               name="tutorNumber"
               onChange={handleChange}
-              className={ values.tutorNumber.length<1 ? "border-color-red":null}
-
+              className={
+                values.tutorNumber.length < 1 ? "border-color-red" : null
+              }
             ></input>
           </li>
           <li>
             <label htmlFor="limit">최대인원</label>
-            <input type="number" name="limit" onChange={handleChange}               className={ values.limit<1? "border-color-red":null}
-></input>
+            <input
+              type="number"
+              name="limit"
+              onChange={handleChange}
+              className={values.limit < 1 ? "border-color-red" : null}
+            ></input>
           </li>
           <li>
             <label htmlFor="profile">튜터프로필</label>
@@ -193,8 +217,7 @@ export default function CourseReg({ years, history }) {
               name="profile"
               rows="5"
               onChange={handleChange}
-            className={ values.profile.length<1? "border-color-red":null}
-
+              className={values.profile.length < 1 ? "border-color-red" : null}
             ></textarea>
           </li>
           <li>

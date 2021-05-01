@@ -73,7 +73,7 @@ function ReportReg({ years, history }) {
     }
   };
 
-  const reportRegister = (data, date) => {
+  const reportRegister = (data, date, modify = false) => {
     setDialog(
       {
         ...dialog,
@@ -85,6 +85,7 @@ function ReportReg({ years, history }) {
             onSubmit={() => setIsShown(false)}
             courseId={data.id}
             week={date}
+            modify={modify}
           />
         ),
       },
@@ -117,7 +118,7 @@ function ReportReg({ years, history }) {
           <Button
             onClick={(e) => {
               e.preventDefault();
-              reportRegister(data, date);
+              reportRegister(data, date, true);
             }}
           >
             예

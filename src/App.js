@@ -10,8 +10,13 @@ import {
 import "./App.css";
 import Base from "./components/layout/Base";
 import Admin from "./components/routes/admin/index";
-import Student from "./components/routes/student/index";
+import {
+  CourseList,
+  MyCourses,
+  ReportSubmit,
+} from "./components/routes/student/index";
 import User from "./components/routes/user/index";
+import Container from "./components/routes/Container";
 
 import Menu from "./components/layout/Menu";
 
@@ -27,17 +32,17 @@ const studentNav = [
   {
     title: "수강신청(강좌조회)",
     to: "courselist",
-    component: <Student.CourseList />,
+    component: <CourseList />,
   },
   {
     title: "내 수강 목록",
     to: "mycourses",
-    component: <Student.MyCourses />,
+    component: <MyCourses />,
   },
   {
     title: "보고서 등록",
     to: "reportsubmit",
-    component: <Student.ReportSubmit />,
+    component: <ReportSubmit />,
   },
 ];
 const adminNav = [
@@ -113,12 +118,17 @@ const App = (props) => {
   return (
     <Base>
       <Switch>
-        <Route exact path={["/", "/login"]} component={User.Login} />
+        <Route exact path={["/", "/login"]} component={Container(User.Login)} />
         <Route exact path="/register" component={User.Register} />
-        <Route exact path="/profile" component={User} />
+        <Route exact path="/profile" component={User.Profile} />
         <Route exact path="/findpassword" component={User.ForgotPassword} />
         {studentNav.map((url, idx) => (
-          <Route exact path={`/tutor/student${url.to}`} key={idx} />
+          <Route
+            exact
+            path={`/tutor/student/${url.to}`}
+            key={idx}
+            component={CourseList}
+          />
         ))}
         {adminNav.map((url, idx) => (
           <Route exact path={`/tutor/admin/${url.to}`} key={idx} />
